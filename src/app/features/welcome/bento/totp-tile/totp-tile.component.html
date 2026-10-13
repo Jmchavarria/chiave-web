@@ -1,0 +1,22 @@
+<app-bento-tile>
+  <span class="k">Two-factor</span>
+  <div class="totp">
+    <svg width="64" height="64" viewBox="0 0 76 76">
+      <circle cx="38" cy="38" r="32" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="5" />
+      <circle
+        class="totp__progress"
+        cx="38"
+        cy="38"
+        r="32"
+        fill="none"
+        stroke="#DDE392"
+        stroke-width="5"
+        stroke-linecap="round"
+        stroke-dasharray="201"
+        stroke-dashoffset="0"
+        transform="rotate(-90 38 38)"
+      />
+    </svg>
+    <span class="totp__code">{{ code() }}</span>
+  </div>
+</app-bento-tile>

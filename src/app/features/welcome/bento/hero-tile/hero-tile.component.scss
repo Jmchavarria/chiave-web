@@ -1,0 +1,55 @@
+.hero {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hero__rings {
+  position: absolute;
+  top: -158px;
+  right: -158px;
+  pointer-events: none;
+}
+
+.hero__body {
+  position: relative;
+}
+
+.hero__title {
+  font-size: clamp(40px, 4.3vw, 62px);
+  margin: 14px 0;
+  max-width: 600px;
+}
+
+.hero__text {
+  margin: 0 0 28px;
+  max-width: 440px;
+  color: var(--chv-text-muted);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.hero__cta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  .chv-btn {
+    min-width: 184px;
+  }
+}
+
+@media (max-width: 960px) {
+  .hero__cta .chv-btn {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero__title {
+    font-size: 38px;
+  }
+}

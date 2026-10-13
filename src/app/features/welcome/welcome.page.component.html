@@ -1,0 +1,74 @@
+<main class="land">
+  <app-statement-tile class="slot slot--a" aria-hidden="true" />
+  <app-illustration-tile class="slot slot--b" aria-hidden="true" />
+  <app-totp-tile class="slot slot--c" aria-hidden="true" />
+  <app-checkup-tile class="slot slot--e" aria-hidden="true" />
+
+  <app-hero-tile
+    class="slot slot--hero"
+    (createAccount)="open('register')"
+    (signIn)="open('login')"
+  />
+
+  <app-vault-tile class="slot slot--d" />
+  <app-generator-tile class="slot slot--g" />
+  <app-autofill-tile class="slot slot--h" aria-hidden="true" />
+  <app-logo-tile class="slot slot--i" aria-hidden="true" />
+</main>
+
+<!-- Contenedor Modal Reutilizable -->
+<app-modal [isOpen]="view() !== 'landing'" (closed)="close()">
+  <!-- VISTA: LOGIN -->
+  @if (view() === 'login') {
+    <app-login></app-login>
+  }
+
+  <!-- VISTA: REGISTER -->
+  @if (view() === 'register') {
+    <div class="modal__icon-box">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M15 7V5a3 3 0 00-6 0v2H7v12h10V7h-2zm-4-2a1 1 0 012 0v2h-2V5zm4 8h-2v2h2v-2z"
+          fill="#080705"
+        />
+      </svg>
+    </div>
+
+    <h2 class="modal__title">Create your account</h2>
+    <p class="modal__subtitle">Set up your private vault in a minute.</p>
+
+    <form class="modal__form" (submit)="$event.preventDefault()">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" placeholder="Your name" class="modal__input" />
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="you@example.com" class="modal__input" />
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" placeholder="Create a password" class="modal__input" />
+        <div class="password-indicators"><span></span><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="form-group">
+        <label>Confirm password</label>
+        <input type="password" placeholder="Repeat your password" class="modal__input" />
+      </div>
+
+      <div class="info-box">
+        <span class="info-icon">✉</span>
+        <p>We'll email you a link to verify your address before you can open your vault.</p>
+      </div>
+
+      <button type="submit" class="modal__btn-primary">Create account</button>
+    </form>
+
+    <p class="modal__footer-text">
+      Already have an account? <a (click)="switchView('login')">Sign in</a>
+    </p>
+  }
+</app-modal>

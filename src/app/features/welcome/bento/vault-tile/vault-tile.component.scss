@@ -1,0 +1,115 @@
+.vault {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.vault__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vault__kbd {
+  font: 500 11px var(--chv-font-mono);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  padding: 2px 7px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.vault__search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  margin: 12px 0;
+  padding: 0 12px;
+  border-radius: 12px;
+  background: rgba(8, 7, 5, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+}
+
+.vault__list {
+  margin: auto 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 10px 9px 12px;
+  border-radius: 14px;
+  background: rgba(8, 7, 5, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: border-color 0.15s, background 0.15s;
+
+  &:hover {
+    border-color: rgba(221, 227, 146, 0.35);
+    background: rgba(8, 7, 5, 0.7);
+  }
+}
+
+.row__ava {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(221, 227, 146, 0.14);
+  color: var(--chv-lime);
+  font: 700 15px var(--chv-font-display);
+}
+
+.row__text {
+  min-width: 0;
+}
+
+.row__name {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.row__user {
+  display: block;
+  margin-top: 2px;
+  font: 400 12px var(--chv-font-mono);
+  color: rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row__copy {
+  flex: none;
+  margin-left: auto;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--chv-white);
+  }
+}
+
+.row__copy--ok {
+  color: var(--chv-lime);
+}

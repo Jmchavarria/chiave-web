@@ -1,0 +1,40 @@
+.chv-btn {
+  height: 50px;
+  padding: 0 28px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--chv-lime);
+  color: var(--chv-black);
+  font: 600 15px var(--chv-font-body);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.15s, transform 0.15s, border-color 0.15s;
+
+  &:hover {
+    background: var(--chv-lime-hover);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    background: rgba(64, 67, 78, 0.55);
+    color: rgba(255, 255, 255, 0.45);
+    cursor: not-allowed;
+  }
+}
+
+.chv-btn--ghost {
+  background: transparent;
+  color: var(--chv-white);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+}

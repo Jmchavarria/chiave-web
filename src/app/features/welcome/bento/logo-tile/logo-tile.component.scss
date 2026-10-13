@@ -1,0 +1,17 @@
+.logo {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--chv-black);
+}
+
+.logo__name {
+  font-family: var(--chv-font-display);
+  font-weight: 700;
+  font-variation-settings: 'wdth' 78;
+  font-size: 40px;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}

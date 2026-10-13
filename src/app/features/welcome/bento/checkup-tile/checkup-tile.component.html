@@ -1,0 +1,20 @@
+<app-bento-tile variant="lime">
+  <div class="card">
+    <div class="card__top">
+      <span>{{ date() }}</span>
+      <span>{{ time() }}</span>
+    </div>
+
+    <div>
+      <span class="card__icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z" />
+          <path d="m9 12 2.2 2.2L15.5 10" />
+        </svg>
+      </span>
+      <div class="th card__title">Security check-up</div>
+    </div>
+
+    <div class="card__foot"><i></i>{{ note() }}</div>
+  </div>
+</app-bento-tile>

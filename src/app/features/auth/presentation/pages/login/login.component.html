@@ -1,0 +1,93 @@
+<div class="modal__icon-box">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M15 7V5a3 3 0 00-6 0v2H7v12h10V7h-2zm-4-2a1 1 0 012 0v2h-2V5zm4 8h-2v2h2v-2z"
+      fill="#080705"
+    />
+  </svg>
+</div>
+
+<h2 class="modal__title">Welcome back</h2>
+<p class="modal__subtitle">Sign in to open your vault.</p>
+
+<form
+  [formGroup]="loginForm"
+  (ngSubmit)="onSubmit()"
+  class="modal__form"
+  (submit)="$event.preventDefault()"
+>
+  <div class="form-group">
+    <label>Email</label>
+    <input
+      type="email"
+      placeholder="you@example.com"
+      class="modal__input"
+      id="email"
+      formControlName="email"
+    />
+    @let email = loginForm.get('email');
+
+    <div class="flex h-3 items-center px-1">
+      @if (email?.invalid && (email?.touched || isSubmitted)) {
+        <span class="text-[11px] text-red-500">
+          @if (email?.errors?.['required']) {
+            Email is required.
+          }
+
+          @if (email?.errors?.['minlength']) {
+            Minimum 3 characters.
+          }
+
+          @if (email?.errors?.['maxlength']) {
+            Maximum 50 characters.
+          }
+        </span>
+      }
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="label-row">
+      <label>Password</label>
+      <a href="#" class="forgot-link">Forgot password?</a>
+    </div>
+    <input
+      type="password"
+      placeholder="Enter your password"
+      class="modal__input"
+      id="password"
+      formControlName="password"
+    />
+
+    @let password = loginForm.get('password');
+
+    <div class="flex h-3 items-center px-1">
+      @if (password?.invalid && (password?.touched || isSubmitted)) {
+        <span class="text-[11px] text-red-500">
+          @if (password?.errors?.['required']) {
+            password is required.
+          }
+
+          @if (password?.errors?.['minlength']) {
+            Minimum 3 characters.
+          }
+
+          @if (password?.errors?.['maxlength']) {
+            Maximum 50 characters.
+          }
+        </span>
+      }
+    </div>
+  </div>
+
+  <div class="form-checkbox">
+    <input type="checkbox" id="remember" />
+    <label for="remember">Remember me</label>
+  </div>
+
+  <button type="submit" class="modal__btn-primary">Sign in</button>
+</form>
+
+<p class="modal__footer-text">
+  <!-- New to Chiave? <a (click)="switchView('register')">Create an account</a> -->
+</p>

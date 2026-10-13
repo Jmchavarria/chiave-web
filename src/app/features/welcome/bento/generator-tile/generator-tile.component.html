@@ -1,0 +1,58 @@
+<app-bento-tile>
+  <section class="gen" aria-label="Password generator">
+    <div class="gen__main">
+      <span class="k">Generator</span>
+      <div class="gen__password" [style.font-size.px]="fontSize()">{{ password() }}</div>
+
+      <div class="gen__meter" aria-hidden="true">
+        @for (on of segments(); track $index) {
+          <i [class.on]="on"></i>
+        }
+      </div>
+
+      <div class="gen__actions">
+        <button class="gbtn gbtn--primary" type="button" (click)="copy()">
+          @if (copied()) {
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m5 12.5 4.5 4.5L19 7.5" />
+            </svg>
+            Copied
+          } @else {
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="9" y="9" width="11" height="11" rx="2" />
+              <path d="M5 15V6a2 2 0 0 1 2-2h8" />
+            </svg>
+            Copy
+          }
+        </button>
+        <button class="gbtn" type="button" (click)="regenerate()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 11a8 8 0 0 0-14.5-4.5L4 8M4 4v4h4M4 13a8 8 0 0 0 14.5 4.5L20 16M20 20v-4h-4" />
+          </svg>
+          New
+        </button>
+      </div>
+    </div>
+
+    <div class="gen__controls">
+      <div class="gen__row">
+        <label for="gen-length">Length</label>
+        <span class="gen__value">{{ length() }}</span>
+      </div>
+      <input
+        class="range"
+        id="gen-length"
+        type="range"
+        min="8"
+        max="32"
+        [value]="length()"
+        [style.--fill]="fill() + '%'"
+        (input)="onLength($event)"
+      />
+      <div class="gen__toggles">
+        <button class="tg" [class.on]="symbols()" type="button" [attr.aria-pressed]="symbols()" (click)="toggleSymbols()">Symbols</button>
+        <button class="tg" [class.on]="numbers()" type="button" [attr.aria-pressed]="numbers()" (click)="toggleNumbers()">Numbers</button>
+      </div>
+    </div>
+  </section>
+</app-bento-tile>

@@ -1,0 +1,38 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--chv-black);
+  color: var(--chv-white);
+  font-family: var(--chv-font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--chv-lime);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+// Etiqueta pequeña en mayúsculas (mono) para las tarjetas
+.k {
+  font: 500 11px var(--chv-font-mono);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--chv-label, var(--chv-text-dim));
+}
+
+// Titulares condensados
+.th {
+  font-family: var(--chv-font-display);
+  font-weight: 700;
+  font-variation-settings: 'wdth' 78;
+  letter-spacing: -0.015em;
+  line-height: 0.98;
+  margin: 0;
+}

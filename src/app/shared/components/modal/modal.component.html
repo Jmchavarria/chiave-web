@@ -1,0 +1,10 @@
+@if (isOpen()) {
+  <div class="modal-backdrop" (click)="onClose()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <!-- Botón de cerrar genérico -->
+      <button class="modal__close" (click)="onClose()" aria-label="Cerrar">×</button>
+
+      <ng-content></ng-content>
+    </div>
+  </div>
+}

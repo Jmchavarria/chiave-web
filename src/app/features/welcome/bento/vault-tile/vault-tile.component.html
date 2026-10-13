@@ -1,0 +1,46 @@
+<app-bento-tile>
+  <section class="vault" aria-label="Vault preview">
+    <div class="vault__head">
+      <span class="k">Your vault</span>
+      <span class="vault__kbd" aria-hidden="true">Ctrl K</span>
+    </div>
+
+    <div class="vault__search" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+      </svg>
+      Search your vault…
+    </div>
+
+    <ul class="vault__list">
+      @for (item of items(); track item.id) {
+        <li class="row">
+          <span class="row__ava" aria-hidden="true">{{ item.initial }}</span>
+          <div class="row__text">
+            <span class="row__name">{{ item.name }}</span>
+            <span class="row__user">{{ item.username }}</span>
+          </div>
+          <button
+            class="row__copy"
+            [class.row__copy--ok]="copiedId() === item.id"
+            type="button"
+            [attr.aria-label]="'Copy password for ' + item.name"
+            (click)="copy(item)"
+          >
+            @if (copiedId() === item.id) {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m5 12.5 4.5 4.5L19 7.5" />
+              </svg>
+            } @else {
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="9" y="9" width="11" height="11" rx="2" />
+                <path d="M5 15V6a2 2 0 0 1 2-2h8" />
+              </svg>
+            }
+          </button>
+        </li>
+      }
+    </ul>
+  </section>
+</app-bento-tile>

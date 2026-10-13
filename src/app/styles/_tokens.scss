@@ -1,0 +1,29 @@
+:root {
+  // Paleta oficial
+  --chv-black: #080705;
+  --chv-charcoal: #40434e;
+  --chv-lime: #dde392;
+  --chv-lime-hover: #e9eea9;
+  --chv-white: #ffffff;
+
+  // Estados
+  --chv-danger: #ff8f7e;
+
+  // Superficies (derivadas de Charcoal Blue)
+  --chv-surface: rgba(64, 67, 78, 0.38);
+  --chv-surface-strong: rgba(64, 67, 78, 0.5);
+  --chv-border: rgba(255, 255, 255, 0.07);
+
+  // Texto
+  --chv-text-muted: rgba(255, 255, 255, 0.7);
+  --chv-text-dim: rgba(255, 255, 255, 0.58);
+
+  // Forma
+  --chv-radius-tile: 24px;
+  --chv-gap: 14px;
+
+  // Tipografía
+  --chv-font-display: 'Bricolage Grotesque', sans-serif;
+  --chv-font-body: 'Geist', system-ui, sans-serif;
+  --chv-font-mono: 'Geist Mono', monospace;
+}
