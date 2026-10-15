@@ -1,4 +1,4 @@
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -12,6 +12,11 @@ import { CommonModule } from '@angular/common';
 export class ModalComponent {
   readonly isOpen = input<boolean>(false);
   readonly closed = output<void>();
+
+  @HostListener('document:keydown.esc')
+  handleKeyEvent(): void {
+    this.onClose();
+  }
 
   onClose(): void {
     this.closed.emit();

@@ -1,0 +1,259 @@
+:host {
+  display: block;
+}
+
+.modal__icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+// ── Textos de cabecera ─────────────────────────────
+.chv-title {
+  font-family: var(--chv-font-display, inherit);
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 18px 0 8px;
+}
+
+.chv-sub {
+  margin: 0 0 22px;
+  color: var(--chv-text-muted, rgba(255, 255, 255, 0.68));
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+// ── Campos ─────────────────────────────────────────
+.chv-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+
+.chv-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.chv-input {
+  height: 46px;
+  width: 100%;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(64, 67, 78, 0.28);
+  color: var(--chv-white, #fff);
+  font-family: var(--chv-font-body, inherit);
+  font-size: 15px;
+  font-weight: 400;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    background 0.15s;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--chv-lime);
+    box-shadow: 0 0 0 4px rgba(221, 227, 146, 0.16);
+    background: rgba(64, 67, 78, 0.42);
+  }
+}
+
+.chv-field--error .chv-input {
+  border-color: var(--chv-danger, #ff8f7e);
+
+  &:focus {
+    box-shadow: 0 0 0 4px rgba(255, 143, 126, 0.18);
+  }
+}
+
+.chv-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--chv-danger, #ff8f7e);
+}
+
+.chv-alert {
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 143, 126, 0.1);
+  border: 1px solid rgba(255, 143, 126, 0.4);
+  color: #ffb4a8;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+// ── Campo de contraseña con ojo ────────────────────
+.chv-pw {
+  position: relative;
+
+  .chv-input {
+    padding-right: 48px;
+  }
+}
+
+.chv-eye {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.65);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+
+  &:hover {
+    color: var(--chv-white, #fff);
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+// ── Medidor ────────────────────────────────────────
+.meter {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 4px;
+
+  &__seg {
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    transition: background 0.2s;
+
+    &.on {
+      background: var(--chv-lime);
+    }
+  }
+}
+
+// ── Reglas de la contraseña ────────────────────────
+.rules {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 14px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rule {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 0.15s;
+
+  &__dot {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.28);
+    display: grid;
+    place-items: center;
+    transition:
+      background 0.15s,
+      border-color 0.15s;
+
+    svg {
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+  }
+
+  &--ok {
+    color: rgba(255, 255, 255, 0.9);
+
+    .rule__dot {
+      background: var(--chv-lime);
+      border-color: var(--chv-lime);
+      color: var(--chv-black);
+
+      svg {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+// ── Nota, botón y pie ──────────────────────────────
+.chv-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 4px 0 18px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(64, 67, 78, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.68);
+
+  svg {
+    flex: none;
+    margin-top: 1px;
+    color: var(--chv-lime);
+  }
+}
+
+.chv-btn--block {
+  width: 100%;
+}
+
+.chv-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--chv-lime);
+  cursor: pointer;
+  transition: color 0.15s;
+
+  &:hover {
+    color: #f0f4b8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.chv-foot {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+@media (max-width: 480px) {
+  .rules {
+    grid-template-columns: 1fr;
+  }
+}

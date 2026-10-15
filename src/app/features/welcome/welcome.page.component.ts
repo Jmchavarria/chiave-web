@@ -11,6 +11,7 @@ import { TotpTileComponent } from './bento/totp-tile/totp-tile.component';
 import { VaultTileComponent } from './bento/vault-tile/vault-tile.component';
 import { ModalComponent } from '../../shared/components/modal/modal.component';
 import { LoginComponent } from '../auth/presentation/pages/login/login.component';
+import { RegisterComponent } from '../auth/presentation/pages/register/register.component';
 
 export type AuthView = 'landing' | 'login' | 'register' | 'verify';
 
@@ -30,6 +31,7 @@ export type AuthView = 'landing' | 'login' | 'register' | 'verify';
     VaultTileComponent,
     ModalComponent,
     LoginComponent,
+    RegisterComponent,
   ],
   templateUrl: './welcome.page.component.html',
   styleUrl: './welcome.page.component.scss',
@@ -37,7 +39,7 @@ export type AuthView = 'landing' | 'login' | 'register' | 'verify';
 })
 export class WelcomePageComponent {
   readonly view = signal<AuthView>('landing');
-
+  
   open(view: AuthView): void {
     this.view.set(view);
   }

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
+  // 1. Rutas fijas primero
   {
     path: 'welcome',
     loadComponent: () =>
@@ -19,8 +20,8 @@ export const routes: Routes = [
       {
         path: 'register',
         loadComponent: () =>
-          import('./features/auth/presentation/pages/register/register').then(
-            (m) => m.RegisterPage,
+          import('./features/auth/presentation/pages/register/register.component').then(
+            (m) => m.RegisterComponent,
           ),
       },
       {
@@ -30,6 +31,7 @@ export const routes: Routes = [
             (m) => m.VerifyEmailPage,
           ),
       },
+      // Si entran a '/auth' a secas, redirige a '/auth/login'
       {
         path: '',
         pathMatch: 'full',
@@ -37,10 +39,12 @@ export const routes: Routes = [
       },
     ],
   },
+
+  // 2. Redirecciones globales AL FINAL para evitar ambigüedades
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'welcome', // <--- Redirige directamente a 'welcome'
+    redirectTo: 'welcome',
   },
   {
     path: '**',

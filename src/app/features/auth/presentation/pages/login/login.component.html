@@ -1,10 +1,11 @@
 <div class="modal__icon-box">
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <path
-      d="M15 7V5a3 3 0 00-6 0v2H7v12h10V7h-2zm-4-2a1 1 0 012 0v2h-2V5zm4 8h-2v2h2v-2z"
-      fill="#080705"
-    />
-  </svg>
+  <img
+    src="/chiave-logo-copia-sin-fondo.png"
+    alt="Chiave Logo"
+    width="44"
+    height="44"
+    class="logo__img"
+  />
 </div>
 
 <h2 class="modal__title">Welcome back</h2>
@@ -33,6 +34,9 @@
           @if (email?.errors?.['required']) {
             Email is required.
           }
+          @if (email?.errors?.['email']) {
+            Invalid email address.
+          }
 
           @if (email?.errors?.['minlength']) {
             Minimum 3 characters.
@@ -45,19 +49,29 @@
       }
     </div>
   </div>
-
   <div class="form-group">
     <div class="label-row">
       <label>Password</label>
       <a href="#" class="forgot-link">Forgot password?</a>
     </div>
-    <input
-      type="password"
-      placeholder="Enter your password"
-      class="modal__input"
-      id="password"
-      formControlName="password"
-    />
+
+    <div class="password-container">
+      <input
+        [type]="showPassword() ? 'text' : 'password'"
+        placeholder="Enter your password"
+        class="modal__input password-input"
+        id="password"
+        formControlName="password"
+      />
+
+      <button type="button" class="password-toggle-btn" (click)="showPassword.set(!showPassword())">
+        @if (showPassword()) {
+          <ng-icon name="heroEyeSlashSolid" class="text-gray-500 size-5"></ng-icon>
+        } @else {
+          <ng-icon name="heroEyeSolid" class="text-gray-500 size-5"></ng-icon>
+        }
+      </button>
+    </div>
 
     @let password = loginForm.get('password');
 
@@ -67,11 +81,9 @@
           @if (password?.errors?.['required']) {
             password is required.
           }
-
           @if (password?.errors?.['minlength']) {
             Minimum 3 characters.
           }
-
           @if (password?.errors?.['maxlength']) {
             Maximum 50 characters.
           }
@@ -80,14 +92,13 @@
     </div>
   </div>
 
-  <div class="form-checkbox">
-    <input type="checkbox" id="remember" />
-    <label for="remember">Remember me</label>
-  </div>
+  @if (serverError()) {
+    <div
+      class="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs text-center"
+    >
+      {{ serverError() }}
+    </div>
+  }
 
   <button type="submit" class="modal__btn-primary">Sign in</button>
 </form>
-
-<p class="modal__footer-text">
-  <!-- New to Chiave? <a (click)="switchView('register')">Create an account</a> -->
-</p>

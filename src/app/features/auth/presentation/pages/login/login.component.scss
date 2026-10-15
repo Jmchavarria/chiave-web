@@ -1,6 +1,5 @@
 /* Estilos internos del Modal y Formularios */
 .modal__icon-box {
-  background: #dde392;
   width: 48px;
   height: 48px;
   border-radius: 12px;
@@ -10,7 +9,7 @@
   margin-bottom: 24px;
 }
 
-.modal__title {
+.modal__title { 
   font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 28px;
   font-weight: 700;
@@ -146,5 +145,33 @@
     color: #bbb;
     line-height: 1.4;
     margin: 0;
+  }
+}
+
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input {
+  padding-right: 42px; // Deja espacio para que el texto no quede debajo del icono
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #fff;
   }
 }
