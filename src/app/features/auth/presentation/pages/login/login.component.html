@@ -17,31 +17,31 @@
   class="modal__form"
   (submit)="$event.preventDefault()"
 >
-  <div class="form-group">
-    <label>Email</label>
+  @let email = loginForm.get('email');
+  @let showEmailError = email?.invalid && (email?.touched || isSubmitted);
+
+  <div class="chv-field" [class.chv-field--error]="showEmailError">
+    <label class="chv-label">Email</label>
     <input
       type="email"
       placeholder="you@example.com"
-      class="modal__input"
+      class="chv-input"
       id="email"
       formControlName="email"
     />
-    @let email = loginForm.get('email');
 
     <div class="flex h-3 items-center px-1">
-      @if (email?.invalid && (email?.touched || isSubmitted)) {
-        <span class="text-[11px] text-red-500">
+      @if (showEmailError) {
+        <span class="chv-error">
           @if (email?.errors?.['required']) {
             Email is required.
           }
           @if (email?.errors?.['email']) {
             Invalid email address.
           }
-
           @if (email?.errors?.['minlength']) {
             Minimum 3 characters.
           }
-
           @if (email?.errors?.['maxlength']) {
             Maximum 50 characters.
           }
@@ -49,9 +49,13 @@
       }
     </div>
   </div>
-  <div class="form-group">
+
+  @let password = loginForm.get('password');
+  @let showPasswordError = password?.invalid && (password?.touched || isSubmitted);
+
+  <div class="chv-field" [class.chv-field--error]="showPasswordError">
     <div class="label-row">
-      <label>Password</label>
+      <label class="chv-label">Password</label>
       <a href="#" class="forgot-link">Forgot password?</a>
     </div>
 
@@ -59,7 +63,7 @@
       <input
         [type]="showPassword() ? 'text' : 'password'"
         placeholder="Enter your password"
-        class="modal__input password-input"
+        class="chv-input password-input"
         id="password"
         formControlName="password"
       />
@@ -73,13 +77,11 @@
       </button>
     </div>
 
-    @let password = loginForm.get('password');
-
     <div class="flex h-3 items-center px-1">
-      @if (password?.invalid && (password?.touched || isSubmitted)) {
-        <span class="text-[11px] text-red-500">
+      @if (showPasswordError) {
+        <span class="chv-error">
           @if (password?.errors?.['required']) {
-            password is required.
+            Password is required.
           }
           @if (password?.errors?.['minlength']) {
             Minimum 3 characters.

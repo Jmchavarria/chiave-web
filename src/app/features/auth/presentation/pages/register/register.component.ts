@@ -77,12 +77,10 @@ export class RegisterComponent {
     });
   }
 
-  /** Primer error del campo, ya traducido a mensaje; null si no hay o aún no lo tocó. */
   protected error(field: Field): string | null {
     const control = this.registerForm.controls[field];
     if (!control.touched) return null;
 
-    // El "mismatch" vive en el grupo, pero se muestra bajo el campo de confirmación
     const errors =
       field === 'confirmPassword'
         ? { ...control.errors, ...this.registerForm.errors }

@@ -54,6 +54,7 @@
   font-family: var(--chv-font-body, inherit);
   font-size: 15px;
   font-weight: 400;
+  outline: none;
   transition:
     border-color 0.15s,
     box-shadow 0.15s,
@@ -68,19 +69,26 @@
   }
 
   &:focus {
-    outline: none;
     border-color: var(--chv-lime);
     box-shadow: 0 0 0 4px rgba(221, 227, 146, 0.16);
     background: rgba(64, 67, 78, 0.42);
   }
 }
 
-.chv-field--error .chv-input {
+// Estados de validación
+div.chv-field.chv-field--error input.chv-input,
+.chv-input.ng-invalid.ng-touched,
+.ng-submitted .chv-input.ng-invalid {
   border-color: var(--chv-danger, #ff8f7e);
+  background: rgba(255, 143, 126, 0.08);
 
   &:focus {
     box-shadow: 0 0 0 4px rgba(255, 143, 126, 0.18);
   }
+}
+
+.chv-input.ng-valid.ng-dirty {
+  border-color: #22c55e;
 }
 
 .chv-error {
@@ -102,7 +110,7 @@
   line-height: 1.45;
 }
 
-// ── Campo de contraseña con ojo ────────────────────
+//Campo de contraseña con ojo
 .chv-pw {
   position: relative;
 
@@ -134,7 +142,7 @@
   }
 }
 
-// ── Medidor ────────────────────────────────────────
+//Medidor
 .meter {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -153,7 +161,7 @@
   }
 }
 
-// ── Reglas de la contraseña ────────────────────────
+//  Reglas de la contraseña
 .rules {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -204,7 +212,7 @@
   }
 }
 
-// ── Nota, botón y pie ──────────────────────────────
+//  Nota, botón y pie
 .chv-note {
   display: flex;
   align-items: flex-start;

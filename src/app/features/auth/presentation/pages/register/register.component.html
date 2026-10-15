@@ -15,11 +15,8 @@
     <div class="chv-alert" role="alert">{{ message }}</div>
   }
 
-  <!-- NAME -->
-
   @let name = registerForm.get('name');
-
-  <div class="chv-field" [class.chv-field--error]="name">
+  <div class="chv-field" [class.chv-field--error]="name?.invalid && (name.touched || isSubmitted)">
     <label class="chv-label" for="reg-name">Name</label>
     <input
       id="reg-name"
@@ -31,10 +28,10 @@
     />
 
     @if (name?.invalid && (name.touched || isSubmitted)) {
-      <span class="text-[11px] text-red-500">
+      <span class="chv-error">
         @if (name?.errors?.['required']) {
           Enter your name.
-        } @else if (name?.errors?.['maxLenght']) {
+        } @else if (name?.errors?.['maxlength']) {
           Maximum 100 characters.
         }
       </span>
@@ -42,7 +39,10 @@
   </div>
 
   @let email = registerForm.get('email');
-  <div class="chv-field" [class.chv-field--error]="email">
+  <div
+    class="chv-field"
+    [class.chv-field--error]="email?.invalid && (email.touched || isSubmitted)"
+  >
     <label class="chv-label" for="reg-email">Email</label>
     <input
       id="reg-email"
@@ -54,19 +54,18 @@
     />
 
     @if (email?.invalid && (email.touched || isSubmitted)) {
-      <span class="text-[11px] text-red-500">
-        @if (name?.errors?.['required']) {
+      <span class="chv-error">
+        @if (email?.errors?.['required']) {
           Email is required.
-        } @else if (name?.errors?.['email']) {
+        } @else if (email?.errors?.['email']) {
           Enter a valid email address.
-        } @else if (name?.errors?.['maxLenght']) {
+        } @else if (email?.errors?.['maxlength']) {
           Maximum 254 characters.
         }
       </span>
     }
   </div>
 
-  <!-- PASSWORD -->
   @let passwordCtrl = registerForm.controls.password;
   @let showPasswordError = passwordCtrl.invalid && (passwordCtrl.touched || isSubmitted);
   <div class="chv-field" [class.chv-field--error]="showPasswordError">
@@ -135,7 +134,6 @@
     }
   </div>
 
-  <!-- CONFIRM PASSWORD -->
   @let confirmCtrl = registerForm.controls.confirmPassword;
   @let mismatch = registerForm.hasError('mismatch');
   @let showConfirm = (confirmCtrl.invalid || mismatch) && (confirmCtrl.touched || isSubmitted);

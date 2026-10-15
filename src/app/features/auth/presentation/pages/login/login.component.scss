@@ -9,7 +9,7 @@
   margin-bottom: 24px;
 }
 
-.modal__title { 
+.modal__title {
   font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 28px;
   font-weight: 700;
@@ -30,19 +30,20 @@
   gap: 16px;
 }
 
-.form-group {
+// ── Campos unificados con el prefijo chv-* ──────────
+.chv-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
-
-  label {
-    font-size: 13px;
-    font-weight: 500;
-    color: #ccc;
-  }
 }
 
-.modal__input {
+.chv-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #ccc;
+}
+
+.chv-input {
   background: #1a1a1a;
   border: 1px solid #333;
   border-radius: 12px;
@@ -52,15 +53,45 @@
   outline: none;
   width: 100%;
   box-sizing: border-box;
-  transition: border-color 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    box-shadow 0.2s;
 
   &::placeholder {
     color: #666;
   }
 
+  &:hover {
+    border-color: #444;
+  }
+
   &:focus {
     border-color: #dde392;
+    box-shadow: 0 0 0 4px rgba(221, 227, 146, 0.12);
   }
+}
+
+// ── Estados de validación ──────────────────────────
+div.chv-field.chv-field--error input.chv-input,
+.chv-input.ng-invalid.ng-touched,
+.ng-submitted .chv-input.ng-invalid {
+  border-color: #ff8f7e;
+  background: rgba(255, 143, 126, 0.08);
+
+  &:focus {
+    border-color: #ff8f7e;
+    box-shadow: 0 0 0 4px rgba(255, 143, 126, 0.18);
+  }
+}
+
+.chv-input.ng-valid.ng-dirty {
+  border-color: #22c55e;
+}
+
+.chv-error {
+  font-size: 11px;
+  color: #ff8f7e;
 }
 
 .label-row {
@@ -78,26 +109,6 @@
 
   &:hover {
     text-decoration: underline;
-  }
-}
-
-.form-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 4px;
-
-  input[type='checkbox'] {
-    accent-color: #dde392;
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-  }
-
-  label {
-    font-size: 14px;
-    color: #ccc;
-    cursor: pointer;
   }
 }
 
@@ -126,36 +137,15 @@
   margin-top: 24px;
 }
 
-.info-box {
-  background: rgba(221, 227, 146, 0.05);
-  border: 1px solid rgba(221, 227, 146, 0.15);
-  padding: 12px;
-  border-radius: 12px;
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  margin-top: 4px;
-
-  .info-icon {
-    font-size: 16px;
-  }
-
-  p {
-    font-size: 12px;
-    color: #bbb;
-    line-height: 1.4;
-    margin: 0;
-  }
-}
-
 .password-container {
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .password-input {
-  padding-right: 42px; // Deja espacio para que el texto no quede debajo del icono
+  padding-right: 42px;
 }
 
 .password-toggle-btn {
