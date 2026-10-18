@@ -19,11 +19,11 @@
 <app-modal [isOpen]="view() !== 'landing'" (closed)="close()">
   <!-- VISTA: LOGIN -->
   @if (view() === 'login') {
-    <app-login></app-login>
+    <app-login (createAccount)="view.set('register')"></app-login>
   }
 
   <!-- VISTA: REGISTER -->
   @if (view() === 'register') {
-    <app-register></app-register>
+    <app-register (signIn)="view.set('login')"></app-register>
   }
 </app-modal>

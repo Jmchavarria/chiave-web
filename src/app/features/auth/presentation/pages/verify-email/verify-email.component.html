@@ -1,0 +1,108 @@
+<div class="page" [class.page--error]="status() === 'error'">
+  <main class="shell">
+    <header class="header">
+      <a routerLink="/auth/login" class="brand">
+        <div class="brand__mark">
+          <img
+            class="brand__logo"
+            src="/chiave-logo-copia-sin-fondo.png"
+            alt="Chieva logo"
+            width="44"
+            height="44"
+          />
+        </div>
+        <span class="brand__name">Chieva</span>
+      </a>
+    </header>
+
+    <section class="card" aria-live="polite">
+      <!-- CARGANDO -->
+      @if (status() === 'loading') {
+        <div class="badge badge--loading" aria-hidden="true">
+          <span class="loader"></span>
+          <div class="badge__core">
+            <ng-icon name="heroEnvelopeSolid" size="28" />
+          </div>
+        </div>
+
+        <h1 class="title">Verifying your email</h1>
+        <p class="message">{{ message() }}</p>
+        <div class="progress" role="progressbar" aria-label="Verifying"></div>
+      }
+
+      <!-- ÉXITO -->
+      @if (status() === 'success') {
+        <div class="badge badge--success" aria-hidden="true">
+          <div class="badge__core">
+            <ng-icon class="check" name="heroCheckSolid" size="38" />
+          </div>
+        </div>
+
+        <h1 class="title">Email verified!</h1>
+        <p class="message">{{ message() }}</p>
+
+        <ul class="checklist">
+          <li class="checklist__item" style="--i: 0">
+            <span class="checklist__tick">
+              <ng-icon name="heroCheckSolid" size="14" />
+            </span>
+            Account created
+          </li>
+          <li class="checklist__item" style="--i: 1">
+            <span class="checklist__tick">
+              <ng-icon name="heroCheckSolid" size="14" />
+            </span>
+            Email verified
+          </li>
+          <li class="checklist__item" style="--i: 2">
+            <span class="checklist__tick">
+              <ng-icon name="heroCheckSolid" size="14" />
+            </span>
+            Your vault is ready
+          </li>
+        </ul>
+
+        <a routerLink="/auth/login" class="action">
+          Go to sign in
+          <ng-icon class="action__arrow" name="heroArrowRightSolid" size="18" />
+        </a>
+      }
+
+      <!-- ERROR -->
+      @if (status() === 'error') {
+        <div class="badge badge--error" aria-hidden="true">
+          <div class="badge__core">
+            <ng-icon name="heroXMarkSolid" size="34" />
+          </div>
+        </div>
+
+        <h1 class="title">Verification failed</h1>
+        <p class="message">{{ message() }}</p>
+
+        <ul class="notes">
+          <li class="notes__item" style="--i: 0">
+            <span class="notes__dot">
+              <ng-icon name="heroClockSolid" size="14" />
+            </span>
+            The link may have expired
+          </li>
+          <li class="notes__item" style="--i: 1">
+            <span class="notes__dot">
+              <ng-icon name="heroLinkSolid" size="14" />
+            </span>
+            Each link works only once
+          </li>
+        </ul>
+
+        <a routerLink="/auth/login" class="action action--ghost">Back to sign in</a>
+      }
+    </section>
+
+    <footer class="footer">
+      <ng-icon name="heroLockClosedSolid" size="14" />
+      <p class="footer__text">
+        Your security starts with Chieva. Keep your digital life protected.
+      </p>
+    </footer>
+  </main>
+</div>

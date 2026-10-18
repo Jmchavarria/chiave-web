@@ -27,10 +27,11 @@ export const routes: Routes = [
       {
         path: 'verify-email',
         loadComponent: () =>
-          import('./features/auth/presentation/pages/verify-email/verify-email').then(
-            (m) => m.VerifyEmailPage,
+          import('./features/auth/presentation/pages/verify-email/verify-email.component').then(
+            (m) => m.VerifyEmailComponent,
           ),
       },
+
       // Si entran a '/auth' a secas, redirige a '/auth/login'
       {
         path: '',

@@ -165,3 +165,26 @@ div.chv-field.chv-field--error input.chv-input,
     color: #fff;
   }
 }
+
+.modal__footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.modal__link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--chv-lime);
+  cursor: pointer;
+  transition: color 0.15s;
+
+  &:hover {
+    color: #f0f4b8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}

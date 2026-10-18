@@ -5,7 +5,6 @@ export interface PasswordRule {
   test: (value: string) => boolean;
 }
 
-/** Requisitos de contraseña; los muestra el formulario de registro y los valida el validator. */
 export const PASSWORD_RULES: PasswordRule[] = [
   { label: '8+ characters', test: (v) => v.length >= 8 },
   { label: 'Upper & lowercase', test: (v) => /[a-z]/.test(v) && /[A-Z]/.test(v) },

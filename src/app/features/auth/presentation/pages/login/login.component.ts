@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginUseCase } from '../../../application/use-cases/login.use-case';
@@ -25,6 +25,7 @@ export class LoginComponent {
   isSubmitted = false;
   isLoading = signal<boolean>(false);
   serverError = signal<string | null>(null);
+  createAccount = output<void>();
   private errorTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(

@@ -26,10 +26,10 @@ export class AuthHttpRepository extends AuthRepository {
     return response.data;
   }
 
-  async verifyEmail(token: string): Promise<void> {
+  async verifyEmail(userId: number, token: string): Promise<void> {
     await firstValueFrom(
-      this.http.post<ApiResponse<unknown>>(`${this.apiUrl}/auth/verify-email`, null, {
-        params: { token },
+      this.http.post<ApiResponse<void>>(`${this.apiUrl}/auth/verify-email`, null, {
+        params: { token, userId },
       }),
     );
   }

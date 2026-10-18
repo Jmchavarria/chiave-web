@@ -2,16 +2,6 @@
   display: block;
 }
 
-.modal__icon-box {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 24px;
-}
-
 // ── Textos de cabecera ─────────────────────────────
 .chv-title {
   font-family: var(--chv-font-display, inherit);
@@ -54,7 +44,6 @@
   font-family: var(--chv-font-body, inherit);
   font-size: 15px;
   font-weight: 400;
-  outline: none;
   transition:
     border-color 0.15s,
     box-shadow 0.15s,
@@ -69,26 +58,19 @@
   }
 
   &:focus {
+    outline: none;
     border-color: var(--chv-lime);
     box-shadow: 0 0 0 4px rgba(221, 227, 146, 0.16);
     background: rgba(64, 67, 78, 0.42);
   }
 }
 
-// Estados de validación
-div.chv-field.chv-field--error input.chv-input,
-.chv-input.ng-invalid.ng-touched,
-.ng-submitted .chv-input.ng-invalid {
+.chv-field--error .chv-input {
   border-color: var(--chv-danger, #ff8f7e);
-  background: rgba(255, 143, 126, 0.08);
 
   &:focus {
     box-shadow: 0 0 0 4px rgba(255, 143, 126, 0.18);
   }
-}
-
-.chv-input.ng-valid.ng-dirty {
-  border-color: #22c55e;
 }
 
 .chv-error {
@@ -110,7 +92,7 @@ div.chv-field.chv-field--error input.chv-input,
   line-height: 1.45;
 }
 
-//Campo de contraseña con ojo
+// ── Campo de contraseña con ojo ────────────────────
 .chv-pw {
   position: relative;
 
@@ -142,7 +124,7 @@ div.chv-field.chv-field--error input.chv-input,
   }
 }
 
-//Medidor
+// ── Medidor ────────────────────────────────────────
 .meter {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -161,7 +143,7 @@ div.chv-field.chv-field--error input.chv-input,
   }
 }
 
-//  Reglas de la contraseña
+// ── Reglas de la contraseña ────────────────────────
 .rules {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -212,7 +194,7 @@ div.chv-field.chv-field--error input.chv-input,
   }
 }
 
-//  Nota, botón y pie
+// ── Nota, botón y pie ──────────────────────────────
 .chv-note {
   display: flex;
   align-items: flex-start;
@@ -260,8 +242,26 @@ div.chv-field.chv-field--error input.chv-input,
   color: rgba(255, 255, 255, 0.68);
 }
 
+// ── Panel de éxito (correo enviado) ────────────────
+.success__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: var(--chv-lime);
+  color: var(--chv-black);
+}
+
+.success strong {
+  color: var(--chv-white, #fff);
+  word-break: break-all;
+}
+
 @media (max-width: 480px) {
   .rules {
     grid-template-columns: 1fr;
   }
 }
+
+
