@@ -1,0 +1,74 @@
+<aside class="sidebar">
+  <a routerLink="/vault" class="brand">
+    <img
+      class="brand__logo"
+      src="/chiave-logo-copia-sin-fondo.png"
+      alt="Chieva logo"
+      width="36"
+      height="36"
+    />
+    <span class="brand__name">Chieva</span>
+  </a>
+
+  <button type="button" class="new-btn" (click)="newItem.emit()">
+    <ng-icon name="heroPlusSolid" size="18" />
+    <span class="label">New item</span>
+  </button>
+
+  <nav class="nav" aria-label="Main navigation">
+    @for (section of sections; track section.title) {
+      <div class="nav__section">
+        <p class="nav__title">{{ section.title }}</p>
+        <ul class="nav__list">
+          @for (item of section.items; track item.link) {
+            <li>
+              <a
+                class="nav__link"
+                [routerLink]="item.link"
+                routerLinkActive="nav__link--active"
+                [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+                ariaCurrentWhenActive="page"
+                [title]="item.label"
+              >
+                <ng-icon [name]="item.icon" size="20" />
+                <span class="label">{{ item.label }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </nav>
+
+  <div class="footer">
+    <a
+      class="nav__link"
+      routerLink="/settings"
+      routerLinkActive="nav__link--active"
+      ariaCurrentWhenActive="page"
+      title="Settings"
+    >
+      <ng-icon name="heroCog6ToothSolid" size="20" />
+      <span class="label">Settings</span>
+    </a>
+
+    <div class="user">
+      <span class="user__avatar" aria-hidden="true">{{ initials() }}</span>
+      <div class="user__info label">
+        <p class="user__name">{{ userName() }}</p>
+        @if (userEmail()) {
+          <p class="user__email">{{ userEmail() }}</p>
+        }
+      </div>
+      <button
+        type="button"
+        class="user__logout"
+        (click)="logout.emit()"
+        aria-label="Sign out"
+        title="Sign out"
+      >
+        <ng-icon name="heroArrowRightOnRectangleSolid" size="20" />
+      </button>
+    </div>
+  </div>
+</aside>

@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  // 1. Rutas fijas primero
+  // 1. Rutas públicas
   {
     path: 'welcome',
     loadComponent: () =>
@@ -31,8 +31,6 @@ export const routes: Routes = [
             (m) => m.VerifyEmailComponent,
           ),
       },
-
-      // Si entran a '/auth' a secas, redirige a '/auth/login'
       {
         path: '',
         pathMatch: 'full',
@@ -41,7 +39,29 @@ export const routes: Routes = [
     ],
   },
 
-  // 2. Redirecciones globales AL FINAL para evitar ambigüedades
+  // 2. Rutas del área privada (Bóveda con el Layout que contiene el Sidebar)
+  {
+    path: 'app',
+    loadComponent: () =>
+      import('./core/components/layout/layout.component').then((m) => m.LayoutComponent),
+    // canActivate: [authGuard], // <-- Aquí conectarás tu AuthGuard a futuro
+    children: [
+      {
+        path: 'vault',
+        loadComponent: () =>
+          import('./features/vault/presentation/pages/vault.component').then(
+            (m) => m.VaultComponent,
+          ),
+      },
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'vault',
+      },
+    ],
+  },
+
+  // 3. Redirecciones globales al final
   {
     path: '',
     pathMatch: 'full',

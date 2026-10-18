@@ -53,7 +53,6 @@ export class VerifyEmailComponent implements OnInit {
   readonly message = signal('Verifying your email...');
 
   async ngOnInit(): Promise<void> {
-    // Con SSR, esto evita que el servidor gaste el token antes que el navegador
     if (!isPlatformBrowser(this.platformId)) return;
 
     const token = this.route.snapshot.queryParamMap.get('token');
