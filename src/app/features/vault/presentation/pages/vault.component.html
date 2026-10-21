@@ -1,1 +1,104 @@
-HAOLC OMOESTAS
+<section class="vault">
+  <header class="head">
+    <div>
+      <h1 class="head__title">All items</h1>
+      <p class="head__sub">{{ vaultItems().total }} items protected in your vault</p>
+    </div>
+
+    <div class="head__actions">
+      <label class="search">
+        <ng-icon name="heroMagnifyingGlassSolid" size="18" />
+        <input
+          type="search"
+          class="search__input"
+          placeholder="Search your vault..."
+          [value]="query()"
+          (input)="onSearch($event)"
+          aria-label="Search your vault"
+        />
+      </label>
+
+      <button type="button" class="btn" (click)="showerForm()">
+        <ng-icon name="heroPlusSolid" size="18" />
+        New item
+      </button>
+    </div>
+  </header>
+
+  <div class="bento">
+    <article class="tile tile--main">
+      <span class="tile__icon"><ng-icon name="heroLockClosedSolid" size="22" /></span>
+      <p class="tile__label">Total items</p>
+      <p class="tile__value">{{ vaultItems().total }}</p>
+      <p class="tile__hint">Encrypted and ready to use</p>
+    </article>
+
+    <article class="tile">
+      <span class="tile__icon"><ng-icon name="heroGlobeAltSolid" size="22" /></span>
+      <p class="tile__label">Logins</p>
+      <p class="tile__value">{{ loginCount() }}</p>
+      <p class="tile__hint">Sites and apps</p>
+    </article>
+
+    <article class="tile">
+      <span class="tile__icon"><ng-icon name="heroStarSolid" size="22" /></span>
+      <p class="tile__label">Favorites</p>
+      <p class="tile__value">{{ favoriteCount() }}</p>
+      <p class="tile__hint">Quick access</p>
+    </article>
+  </div>
+
+  <div class="list">
+    @for (item of filteredItems(); track item.id) {
+      <article class="row">
+        <span class="row__avatar" aria-hidden="true">{{ initial(item) }}</span>
+
+        <div class="row__main">
+          <p class="row__name">{{ item.title }}</p>
+          <p class="row__user">{{ user?.email }}</p>
+        </div>
+
+        <span class="row__category">{{ typeLabels[item.type] }}</span>
+
+        <span class="row__date">{{ item.updatedAt | date: 'MMM d, y' }}</span>
+
+        <div class="row__actions">
+          <span
+            class="row__fav"
+            [class.row__fav--on]="item.isFavorite"
+            role="img"
+            [attr.aria-label]="item.isFavorite ? 'Favorite' : 'Not a favorite'"
+          >
+            <ng-icon name="heroStarSolid" size="18" />
+          </span>
+
+          <button
+            type="button"
+            class="icon-btn"
+            [class.icon-btn--ok]="copiedId() === item.id"
+            (click)="copy(item)"
+            aria-label="Copy"
+            [title]="copiedId() === item.id ? 'Copied' : 'Copy'"
+          >
+            <ng-icon
+              [name]="copiedId() === item.id ? 'heroCheckSolid' : 'heroClipboardDocumentSolid'"
+              size="18"
+            />
+          </button>
+        </div>
+      </article>
+    } @empty {
+      <div class="empty">
+        <ng-icon name="heroMagnifyingGlassSolid" size="28" />
+        <p class="empty__title">Nothing found</p>
+        <p class="empty__text">Try another search or add your first item.</p>
+      </div>
+    }
+  </div>
+</section>
+
+<app-modal [isOpen]="showForm()" (closed)="showForm.set(false)">
+  @if (showForm()) {
+    <app-new-item-form (cancelled)="showForm.set(false)" />
+  }
+</app-modal>

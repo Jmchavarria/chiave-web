@@ -1,6 +1,5 @@
-import { UserStatus } from '../../types/user.type';
-
 export interface UserModel {
+  id?: number;
   name: string;
   email: string;
   password: string;

@@ -1,0 +1,264 @@
+$lime: var(--chv-lime, #dde392);
+$black: var(--chv-black, #080705);
+$danger: var(--chv-danger, #ff8f7e);
+
+:host {
+  display: block;
+  color: #fff;
+}
+
+.head {
+  margin-bottom: 22px;
+
+  &__title {
+    margin: 0;
+    font-size: 24px;
+    line-height: 1.15;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  &__sub {
+    margin: 6px 0 0;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.55);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+.label {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+
+  &__opt {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+.input {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(64, 67, 78, 0.28);
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    background 0.15s;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $lime;
+    box-shadow: 0 0 0 4px rgba(221, 227, 146, 0.16);
+    background: rgba(64, 67, 78, 0.42);
+  }
+
+  &--area {
+    height: auto;
+    min-height: 90px;
+    padding: 12px 14px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+}
+
+.field--error .input {
+  border-color: $danger;
+
+  &:focus {
+    box-shadow: 0 0 0 4px rgba(255, 143, 126, 0.18);
+  }
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 13px;
+  color: $danger;
+}
+
+.types {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.type {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.68);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $lime;
+    outline-offset: 2px;
+  }
+
+  &--active {
+    background: rgba(221, 227, 146, 0.14);
+    border-color: rgba(221, 227, 146, 0.5);
+    color: $lime;
+
+    &:hover {
+      background: rgba(221, 227, 146, 0.2);
+      color: $lime;
+    }
+  }
+}
+
+.pw {
+  position: relative;
+
+  .input {
+    padding-right: 92px;
+  }
+
+  &__actions {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    gap: 2px;
+  }
+
+  &__btn {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.65);
+    cursor: pointer;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    &:first-child:hover {
+      color: $lime;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $lime;
+    }
+  }
+}
+
+.fav {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.82);
+  cursor: pointer;
+
+  input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: $lime;
+    cursor: pointer;
+  }
+
+  ng-icon {
+    color: $lime;
+  }
+}
+
+.foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  padding: 0 22px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: $lime;
+  color: $black;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    transform 0.15s;
+
+  &:hover {
+    background: #e8edb0;
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $lime;
+    outline-offset: 2px;
+  }
+
+  &--ghost {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.18);
+    color: #fff;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.07);
+    }
+  }
+}

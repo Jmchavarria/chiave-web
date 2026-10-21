@@ -5,6 +5,8 @@ import { LoginUseCase } from '../../../application/use-cases/login.use-case';
 import { AuthSessionService } from '../../../application/auth-session.service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroEyeSlashSolid, heroEyeSolid } from '@ng-icons/heroicons/solid';
+import { AuthService } from '../../../../../shared/services/auth.service';
+import { asapScheduler } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +34,7 @@ export class LoginComponent {
     private readonly fb: FormBuilder,
     private readonly loginUseCase: LoginUseCase,
     private readonly authSessionService: AuthSessionService,
+    private readonly authService: AuthService,
     private readonly router: Router,
   ) {
     this.loginForm = this.fb.nonNullable.group({
@@ -39,7 +42,6 @@ export class LoginComponent {
       password: ['', [Validators.required]],
     });
   }
-
   onSubmit(): void {
     this.isSubmitted = true;
     this.serverError.set(null);
@@ -49,30 +51,36 @@ export class LoginComponent {
       return;
     }
 
-    const { email, password } = this.loginForm.value;
+    const { email, password } = this.loginForm.getRawValue();
 
     this.isLoading.set(true);
 
     this.loginUseCase
       .execute(email, password)
-      .then((authSession) => {
-        this.authSessionService.setSession(authSession);
+      .then((response) => {
+        this.authSessionService.setSession(response.authSession);
+        this.authService.setUser(response.user, response.authSession.accessToken);
 
-        this.router.navigate(['/auth/verify-email']);
+        this.router.navigate(['/app/vault']);
       })
       .catch((error) => {
-        const message = error?.error?.error?.message || 'Error';
+        console.error('Error en el login:', error);
+
+        const message =
+          error?.error?.error?.message ?? error?.message ?? 'No fue posible iniciar sesión.';
+
+        this.serverError.set(message);
 
         if (this.errorTimer) {
           clearTimeout(this.errorTimer);
         }
 
-        this.serverError.set(message);
-
         this.errorTimer = setTimeout(() => {
-          this.serverError.set('');
+          this.serverError.set(null);
         }, 5000);
       })
-      .finally(() => this.isLoading.set(false));
+      .finally(() => {
+        this.isLoading.set(false);
+      });
   }
 }

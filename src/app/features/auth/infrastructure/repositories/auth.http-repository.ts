@@ -2,9 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import type { AuthSession } from '../../domain/models/auth-session.model';
-import { AuthRepository } from '../../domain/repositories/auth.repository';
-
+import { AuthRepository, loginResponse } from '../../domain/repositories/auth.repository';
 export interface ApiResponse<T> {
   success: boolean;
   message: string;
@@ -18,9 +16,9 @@ export class AuthHttpRepository extends AuthRepository {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl;
 
-  async login(email: string, password: string): Promise<AuthSession> {
+  async login(email: string, password: string): Promise<loginResponse> {
     const response = await firstValueFrom(
-      this.http.post<ApiResponse<AuthSession>>(`${this.apiUrl}/auth/login`, { email, password }),
+      this.http.post<ApiResponse<loginResponse>>(`${this.apiUrl}/auth/login`, { email, password }),
     );
 
     return response.data;

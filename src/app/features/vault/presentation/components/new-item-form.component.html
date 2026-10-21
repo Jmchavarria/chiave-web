@@ -1,0 +1,141 @@
+<header class="head">
+  <h2 class="head__title">New item</h2>
+  <p class="head__sub">Your credentials are encrypted before being stored.</p>
+</header>
+
+<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+  <div class="field">
+    <span class="label" id="type-label">Type</span>
+    <div class="types" role="radiogroup" aria-labelledby="type-label">
+      @for (t of types; track t.value) {
+        <button
+          type="button"
+          role="radio"
+          class="type"
+          [class.type--active]="form.controls.type.value === t.value"
+          [attr.aria-checked]="form.controls.type.value === t.value"
+          (click)="setType(t.value)"
+        >
+          <ng-icon [name]="t.icon" size="18" />
+          {{ t.label }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="field" [class.field--error]="showError('title')">
+    <label class="label" for="title">Title</label>
+    <input
+      #titleInput
+      id="title"
+      class="input"
+      type="text"
+      formControlName="title"
+      placeholder="e.g. GitHub, Netflix"
+      autocomplete="off"
+    />
+    @if (showError('title')) {
+      <p class="error">
+        <ng-icon name="heroExclamationCircleSolid" size="16" />
+        Enter a title for this item.
+      </p>
+    }
+  </div>
+
+  <div class="field" [class.field--error]="showError('username')">
+    <label class="label" for="username">Username or email</label>
+    <input
+      id="username"
+      class="input"
+      type="text"
+      formControlName="username"
+      placeholder="you@example.com"
+      autocomplete="off"
+    />
+    @if (showError('username')) {
+      <p class="error">
+        <ng-icon name="heroExclamationCircleSolid" size="16" />
+        Enter a username or email.
+      </p>
+    }
+  </div>
+
+  <div class="field" [class.field--error]="showError('password')">
+    <label class="label" for="password">Password</label>
+    <div class="pw">
+      <input
+        id="password"
+        class="input"
+        [type]="showPassword() ? 'text' : 'password'"
+        formControlName="password"
+        placeholder="••••••••••••"
+        autocomplete="new-password"
+      />
+      <div class="pw__actions">
+        <button
+          type="button"
+          class="pw__btn"
+          (click)="generatePassword()"
+          aria-label="Generate a password"
+          title="Generate a password"
+        >
+          <ng-icon name="heroSparklesSolid" size="18" />
+        </button>
+        <button
+          type="button"
+          class="pw__btn"
+          (click)="showPassword.set(!showPassword())"
+          [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+        >
+          <ng-icon [name]="showPassword() ? 'heroEyeSlashSolid' : 'heroEyeSolid'" size="18" />
+        </button>
+      </div>
+    </div>
+    @if (showError('password')) {
+      <p class="error">
+        <ng-icon name="heroExclamationCircleSolid" size="16" />
+        Enter a password or generate one.
+      </p>
+    }
+  </div>
+
+  <div class="field" [class.field--error]="showError('url')">
+    <label class="label" for="url">Website <span class="label__opt">Optional</span></label>
+    <input
+      id="url"
+      class="input"
+      type="text"
+      formControlName="url"
+      placeholder="https://github.com"
+      autocomplete="off"
+    />
+    @if (showError('url')) {
+      <p class="error">
+        <ng-icon name="heroExclamationCircleSolid" size="16" />
+        Enter a valid address, like github.com.
+      </p>
+    }
+  </div>
+
+  <div class="field">
+    <label class="label" for="notes">Notes <span class="label__opt">Optional</span></label>
+    <textarea
+      id="notes"
+      class="input input--area"
+      formControlName="notes"
+      rows="3"
+      placeholder="Anything else worth remembering"
+    ></textarea>
+  </div>
+
+  <label class="fav">
+    <input type="checkbox" formControlName="isFavorite" />
+    <ng-icon name="heroStarSolid" size="18" />
+    Add to favorites
+  </label>
+
+  <footer class="foot">
+    <button type="button" class="btn btn--ghost" (click)="cancelled.emit()">Cancel</button>
+    <button type="submit" class="btn">Save item</button>
+  </footer>
+</form>

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { UserRepository } from '../../domain/repositories/user.repository';
@@ -9,13 +9,12 @@ import { ApiResponse } from '../../../auth/infrastructure/repositories/auth.http
 @Injectable({
   providedIn: 'root',
 })
-export class UserHttpRepository extends UserRepository {
-  private readonly http = inject(HttpClient);
-  private readonly apiUrl = environment.apiUrl;
+export class UserHttpRepository implements UserRepository {
+  constructor(private readonly http: HttpClient) {}
 
   async save(input: UserModel): Promise<UserModel> {
     const response = await firstValueFrom(
-      this.http.post<ApiResponse<UserModel>>(`${this.apiUrl}/users/`, input),
+      this.http.post<ApiResponse<UserModel>>(`${environment.apiUrl}/users/`, input),
     );
     return response.data;
   }

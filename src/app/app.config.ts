@@ -7,6 +7,8 @@ import { AuthRepository } from './features/auth/domain/repositories/auth.reposit
 import { AuthHttpRepository } from './features/auth/infrastructure/repositories/auth.http-repository';
 import { UserRepository } from './features/users/domain/repositories/user.repository';
 import { UserHttpRepository } from './features/users/infrastructure/repositories/user.http-repository';
+import { VaultRepository } from './features/vault/domain/repositories/vault.repository';
+import { VaultHttpRepository } from './features/vault/infrastructure/repositories/vault.http-repository';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,5 +24,10 @@ export const appConfig: ApplicationConfig = {
       provide: UserRepository,
       useExisting: UserHttpRepository,
     },
+    {
+      provide: VaultRepository,
+      useExisting: VaultHttpRepository,
+    },
   ],
 };
+ 
