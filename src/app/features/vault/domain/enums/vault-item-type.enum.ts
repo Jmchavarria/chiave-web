@@ -1,5 +1,7 @@
 export enum VaultItemTypeEnum {
   LOGIN = 'LOGIN',
-  NOTE = 'NOTE',
+  IDENTITY = 'IDENTITY',
+  SECURE_NOTE = 'SECURE_NOTE',
   CARD = 'CARD',
+  SSH_KEY = 'SSH_KEY',
 }

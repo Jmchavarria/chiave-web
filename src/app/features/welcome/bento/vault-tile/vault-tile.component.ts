@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { BentoTileComponent } from '../bento-tile/bento-tile.component';
 
 export interface VaultItem {
@@ -14,11 +22,6 @@ const SAMPLE_ITEMS: VaultItem[] = [
   { id: '3', initial: 'S', name: 'Studio Git', username: 'you-dev' },
   { id: '4', initial: 'C', name: 'Cloud Console', username: 'you@example.com' },
 ];
-
-/**
- * Vista previa de la bóveda. Hoy usa datos de ejemplo;
- * al pulsar copiar emite `copyPassword` y muestra el check un momento.
- */
 @Component({
   selector: 'app-vault-tile',
   standalone: true,

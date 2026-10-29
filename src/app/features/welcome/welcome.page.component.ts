@@ -39,7 +39,7 @@ export type AuthView = 'landing' | 'login' | 'register' | 'verify';
 })
 export class WelcomePageComponent {
   readonly view = signal<AuthView>('landing');
-  
+
   open(view: AuthView): void {
     this.view.set(view);
   }

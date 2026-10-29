@@ -1,42 +1,246 @@
+$lime: var(--chv-lime, #dde392);
+
+// Ancho: lo decide el input `size` del componente (variable --modal-max-width)
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 1000;
-  padding: 1rem;
-  overflow-y: auto;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(8, 7, 5, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  animation: modal-fade 0.2s ease both;
 }
 
+// Columna: cabecera fija + pestañas + cuerpo con scroll + pie fijo
 .modal-container {
-  background: #121212;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  max-width: 440px;
+  max-width: var(--modal-max-width, 28rem);
+  max-height: calc(100dvh - 32px);
+  overflow: hidden;
   border-radius: 24px;
-  padding: 32px;
-  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, rgba(64, 67, 78, 0.38), rgba(64, 67, 78, 0.14)), #0d0c0a;
   color: #fff;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-  max-height: 90vh;
-  overflow-y: auto;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
+  animation: modal-rise 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-.modal__close {
-  position: absolute;
-  top: 24px;
-  right: 24px;
+// ── Cabecera fija ──────────────────────────────────
+// Sin título: solo la X a la derecha
+.modal-header {
+  flex: none;
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 12px 0;
+
+  // Con título: título + descripción a la izquierda y línea divisoria
+  &--titled {
+    padding: 24px 16px 18px 28px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    @media (max-width: 560px) {
+      padding: 20px 12px 16px 20px;
+    }
+  }
+
+  // Con pestañas, la línea la pone la barra de pestañas
+  &--tabbed {
+    padding-bottom: 12px;
+    border-bottom: 0;
+  }
+}
+
+.modal-heading {
+  flex: 1;
+  min-width: 0;
+  padding-right: 12px;
+
+  &__title {
+    margin: 0;
+    font-size: 24px;
+    line-height: 1.15;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  &__text {
+    margin: 6px 0 0;
+    font-size: 14px;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.55);
+  }
+}
+
+// ── Pestañas ───────────────────────────────────────
+.modal-tabs {
+  flex: none;
+  display: flex;
+  gap: 4px;
+  padding: 0 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+
+  @media (max-width: 560px) {
+    padding: 0 20px;
+  }
+}
+
+.modal-tab {
+  position: relative;
+  margin-bottom: -1px; // la línea activa tapa la divisoria
+  padding: 10px 14px;
+  border: 0;
+  border-bottom: 2px solid transparent;
   background: transparent;
-  border: none;
-  color: #888;
-  font-size: 24px;
+  color: rgba(255, 255, 255, 0.55);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color 0.15s;
 
   &:hover {
     color: #fff;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $lime;
+    outline-offset: -2px;
+    border-radius: 6px 6px 0 0;
+  }
+
+  &--active {
+    color: $lime;
+    border-bottom-color: $lime;
+
+    &:hover {
+      color: $lime;
+    }
+  }
+}
+
+// ── Zona con scroll ────────────────────────────────
+.modal-body {
+  flex: 1 1 auto;
+  min-height: 0; // necesario para que un hijo de flex pueda hacer scroll
+  overflow-y: auto;
+  padding: 0 28px 28px;
+  color-scheme: dark;
+
+  @media (max-width: 560px) {
+    padding: 0 20px 20px;
+  }
+}
+
+// Con cabecera titulada o pestañas, el contenido necesita aire arriba
+.modal-header--titled + .modal-body,
+.modal-tabs + .modal-body {
+  padding-top: 20px;
+}
+
+// ── Pie fijo ───────────────────────────────────────
+.modal-footer {
+  flex: none;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  // sin botones proyectados (login, registro...) no se muestra
+  &:empty {
+    display: none;
+  }
+
+  @media (max-width: 560px) {
+    padding: 14px 20px;
+  }
+}
+
+// ── Botón de cerrar ────────────────────────────────
+.modal__close {
+  flex: none;
+  margin-left: auto;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $lime;
+  }
+}
+
+// ── Scroll delgado, a juego con el sidebar ─────────
+$thumb: #40434e;
+$thumb-hover: #5b5f6e;
+
+// Chrome, Edge, Safari
+.modal-body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: $thumb;
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+
+  &:hover {
+    background: $thumb-hover;
+    background-clip: padding-box;
+  }
+}
+
+// Firefox
+@supports not selector(::-webkit-scrollbar) {
+  .modal-body {
+    scrollbar-width: thin;
+    scrollbar-color: $thumb transparent;
+  }
+}
+
+
+@keyframes modal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop,
+  .modal-container {
+    animation: none;
   }
 }

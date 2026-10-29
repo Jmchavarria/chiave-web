@@ -9,7 +9,7 @@ import { VaultModel } from '../../../domain/models/vault.model';
 export class FindVaultByUserIdUseCase {
   constructor(private readonly repository: VaultRepository) {}
 
-  async execute(userId: number, filters?: FindByUserId): Promise<PaginatedResult<VaultModel>> {
-    return await this.repository.findByUserId(userId, filters);
+  async execute(filters?: FindByUserId): Promise<PaginatedResult<VaultModel>> {
+    return await this.repository.findByUserId(filters);
   }
 }

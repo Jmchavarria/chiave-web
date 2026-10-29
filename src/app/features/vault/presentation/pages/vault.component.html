@@ -12,20 +12,19 @@
           type="search"
           class="search__input"
           placeholder="Search your vault..."
-          [value]="query()"
-          (input)="onSearch($event)"
           aria-label="Search your vault"
         />
       </label>
 
-      <button type="button" class="btn" (click)="showerForm()">
+      <!-- Llamamos al método openCreate() que ahora usa el servicio local -->
+      <button type="button" class="btn" (click)="openCreate()">
         <ng-icon name="heroPlusSolid" size="18" />
         New item
       </button>
     </div>
   </header>
 
-  <div class="bento">
+  <!-- <div class="bento">
     <article class="tile tile--main">
       <span class="tile__icon"><ng-icon name="heroLockClosedSolid" size="22" /></span>
       <p class="tile__label">Total items</p>
@@ -46,11 +45,11 @@
       <p class="tile__value">{{ favoriteCount() }}</p>
       <p class="tile__hint">Quick access</p>
     </article>
-  </div>
+  </div> -->
 
   <div class="list">
-    @for (item of filteredItems(); track item.id) {
-      <article class="row">
+    @for (item of vaultItems().data; track item.id) {
+      <article class="row" (click)="openEdit(item)" style="cursor: pointer" title="Click to edit">
         <span class="row__avatar" aria-hidden="true">{{ initial(item) }}</span>
 
         <div class="row__main">
@@ -62,15 +61,19 @@
 
         <span class="row__date">{{ item.updatedAt | date: 'MMM d, y' }}</span>
 
-        <div class="row__actions">
-          <span
-            class="row__fav"
-            [class.row__fav--on]="item.isFavorite"
-            role="img"
-            [attr.aria-label]="item.isFavorite ? 'Favorite' : 'Not a favorite'"
+        <div class="row__actions" (click)="$event.stopPropagation()">
+          <!-- Marcar / desmarcar favorito -->
+          <button
+            type="button"
+            class="icon-btn"
+            [class.icon-btn--on]="item.isFavorite"
+            (click)="toggleFavorite(item)"
+            [attr.aria-pressed]="item.isFavorite"
+            [attr.aria-label]="item.isFavorite ? 'Remove from favorites' : 'Add to favorites'"
+            [title]="item.isFavorite ? 'Remove from favorites' : 'Add to favorites'"
           >
             <ng-icon name="heroStarSolid" size="18" />
-          </span>
+          </button>
 
           <button
             type="button"
@@ -97,8 +100,14 @@
   </div>
 </section>
 
-<app-modal [isOpen]="showForm()" (closed)="showForm.set(false)">
-  @if (showForm()) {
-    <app-new-item-form (cancelled)="showForm.set(false)" />
-  }
-</app-modal>
+<!-- Modal controlado reactivamente por el servicio local -->
+@if (modalState.mode() !== null) {
+  <app-modal
+    size="lg"
+    [title]="modalState.header().title"
+    [description]="modalState.header().description"
+    (onCancel)="modalState.close()"
+  >
+    <app-new-item-form (saved)="saveVault($event)" (cancelled)="modalState.close()" />
+  </app-modal>
+}

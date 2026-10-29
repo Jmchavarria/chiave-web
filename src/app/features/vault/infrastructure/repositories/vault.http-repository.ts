@@ -1,20 +1,33 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
-import { PaginatedResult } from '../../../../core/types/paginated-response';
+import {
+  ApiResponse,
+  PaginatedApiResponse,
+} from '../../../../core/interfaces/api-response.interface';
+import { AuthService } from '../../../../shared/services/auth.service';
+import { UserModel } from '../../../users/domain/models/user.model';
 import { VaultModel } from '../../domain/models/vault.model';
-import { FindByUserId, VaultRepository } from '../../domain/repositories/vault.repository';
+import {
+  CreateVaultProps,
+  FindByUserId,
+  UpdateVaultProps,
+  VaultRepository,
+} from '../../domain/repositories/vault.repository';
 
 @Injectable({
   providedIn: 'root',
 })
 export class VaultHttpRepository implements VaultRepository {
+  constructor(
+    private readonly http: HttpClient,
+    private readonly authService: AuthService,
+  ) {}
+
   private readonly baseUrl = `${environment.apiUrl}/vault`;
 
-  constructor(private readonly http: HttpClient) {}
-
-  async findByUserId(userId: number, filters?: FindByUserId): Promise<PaginatedResult<VaultModel>> {
+  async findByUserId(filters?: FindByUserId): Promise<PaginatedApiResponse<VaultModel>> {
     let params = new HttpParams();
 
     if (filters?.filter) {
@@ -26,7 +39,23 @@ export class VaultHttpRepository implements VaultRepository {
     }
 
     return await firstValueFrom(
-      this.http.get<PaginatedResult<VaultModel>>(`${this.baseUrl}/${userId}`, { params }),
+      this.http.get<PaginatedApiResponse<VaultModel>>(`${this.baseUrl}/by-user`, {
+        params,
+      }),
     );
+  }
+
+  async save(input: CreateVaultProps): Promise<ApiResponse<VaultModel>> {
+    return await firstValueFrom(this.http.post<ApiResponse<VaultModel>>(`${this.baseUrl}`, input));
+  }
+
+  async update(id: number, input: UpdateVaultProps): Promise<ApiResponse<VaultModel>> {
+    return await firstValueFrom(
+      this.http.patch<ApiResponse<VaultModel>>(`${this.baseUrl}/${id}`, input),
+    );
+  }
+
+  async findById(id: number): Promise<ApiResponse<VaultModel>> {
+    return await firstValueFrom(this.http.get<ApiResponse<VaultModel>>(`${this.baseUrl}/${id}`));
   }
 }

@@ -7,6 +7,7 @@ $danger: var(--chv-danger, #ff8f7e);
   color: #fff;
 }
 
+// ── Encabezado ─────────────────────────────────────
 .head {
   margin-bottom: 22px;
 
@@ -25,11 +26,16 @@ $danger: var(--chv-danger, #ff8f7e);
   }
 }
 
+// ── Campos ─────────────────────────────────────────
 .field {
   display: flex;
   flex-direction: column;
   gap: 7px;
   margin-bottom: 16px;
+
+  &--full {
+    grid-column: 1 / -1;
+  }
 }
 
 .label {
@@ -55,6 +61,7 @@ $danger: var(--chv-danger, #ff8f7e);
   border: 1px solid rgba(255, 255, 255, 0.16);
   background: rgba(64, 67, 78, 0.28);
   color: #fff;
+  color-scheme: dark;
   font: inherit;
   font-size: 15px;
   transition:
@@ -84,6 +91,26 @@ $danger: var(--chv-danger, #ff8f7e);
     resize: vertical;
     line-height: 1.5;
   }
+
+  &--mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 14px;
+  }
+}
+
+// Lista desplegable con flecha propia
+select.input {
+  appearance: none;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a3a8b3' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  cursor: pointer;
+
+  option {
+    background: #151618;
+    color: #fff;
+  }
 }
 
 .field--error .input {
@@ -103,25 +130,68 @@ $danger: var(--chv-danger, #ff8f7e);
   color: $danger;
 }
 
+// ── Rejillas y secciones ───────────────────────────
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 14px;
+
+  &--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+
+    &--3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
+
+.section {
+  margin: 22px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+
+  &:first-child {
+    margin-top: 4px;
+  }
+}
+
+// ── Tipo (selector) ────────────────────────────────
 .types {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 8px;
+
+  @media (max-width: 720px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .type {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 44px;
+  min-height: 76px;
+  padding: 10px 6px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: transparent;
   color: rgba(255, 255, 255, 0.68);
   font: inherit;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
   cursor: pointer;
   transition:
     background-color 0.15s,
@@ -150,6 +220,7 @@ $danger: var(--chv-danger, #ff8f7e);
   }
 }
 
+// ── Contraseña con acciones ────────────────────────
 .pw {
   position: relative;
 
@@ -194,6 +265,7 @@ $danger: var(--chv-danger, #ff8f7e);
   }
 }
 
+// ── Favorito ───────────────────────────────────────
 .fav {
   display: inline-flex;
   align-items: center;
@@ -215,6 +287,7 @@ $danger: var(--chv-danger, #ff8f7e);
   }
 }
 
+// ── Pie del formulario ─────────────────────────────
 .foot {
   display: flex;
   justify-content: flex-end;

@@ -1,4 +1,4 @@
-import { Component, OnInit, output, signal } from '@angular/core';
+import { Component, output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginUseCase } from '../../../application/use-cases/login.use-case';
@@ -6,7 +6,6 @@ import { AuthSessionService } from '../../../application/auth-session.service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroEyeSlashSolid, heroEyeSolid } from '@ng-icons/heroicons/solid';
 import { AuthService } from '../../../../../shared/services/auth.service';
-import { asapScheduler } from 'rxjs';
 
 @Component({
   selector: 'app-login',

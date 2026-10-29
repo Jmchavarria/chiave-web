@@ -15,6 +15,7 @@ $danger: var(--chv-danger, #ff8f7e);
   color: #fff;
 }
 
+// ── Encabezado ─────────────────────────────────────
 .head {
   display: flex;
   flex-wrap: wrap;
@@ -36,6 +37,7 @@ $danger: var(--chv-danger, #ff8f7e);
     color: rgba(255, 255, 255, 0.55);
   }
 
+  // buscador + botón "New item"
   &__actions {
     display: flex;
     flex-wrap: wrap;
@@ -86,6 +88,7 @@ $danger: var(--chv-danger, #ff8f7e);
   }
 }
 
+// ── Botón principal ────────────────────────────────
 .btn {
   display: inline-flex;
   align-items: center;
@@ -118,6 +121,7 @@ $danger: var(--chv-danger, #ff8f7e);
   }
 }
 
+// ── Bento ──────────────────────────────────────────
 .bento {
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr;
@@ -175,6 +179,7 @@ $danger: var(--chv-danger, #ff8f7e);
     color: rgba(255, 255, 255, 0.45);
   }
 
+  // tarjeta principal destacada en lima
   &--main {
     background: $lime;
     border-color: transparent;
@@ -192,6 +197,7 @@ $danger: var(--chv-danger, #ff8f7e);
   }
 }
 
+// ── Lista ──────────────────────────────────────────
 .list {
   display: flex;
   flex-direction: column;
@@ -266,18 +272,7 @@ $danger: var(--chv-danger, #ff8f7e);
     justify-content: flex-end;
   }
 
-  &__fav {
-    display: grid;
-    place-items: center;
-    width: 36px;
-    height: 36px;
-    color: rgba(255, 255, 255, 0.2);
-
-    &--on {
-      color: $lime;
-    }
-  }
-
+  // en pantallas medianas y pequeñas se ocultan columnas secundarias
   @media (max-width: 900px) {
     grid-template-columns: 44px minmax(0, 1fr) auto;
 
@@ -288,6 +283,7 @@ $danger: var(--chv-danger, #ff8f7e);
   }
 }
 
+// ── Botones de icono ───────────────────────────────
 .icon-btn {
   display: grid;
   place-items: center;
@@ -311,12 +307,19 @@ $danger: var(--chv-danger, #ff8f7e);
     outline: 2px solid $lime;
   }
 
+  // estrella de favorito activa
+  &--on,
+  &--on:hover {
+    color: $lime;
+  }
+
   &--ok {
     color: $lime;
     background: rgba(221, 227, 146, 0.14);
   }
 }
 
+// ── Estado vacío ───────────────────────────────────
 .empty {
   display: flex;
   flex-direction: column;
@@ -338,3 +341,6 @@ $danger: var(--chv-danger, #ff8f7e);
     font-size: 14px;
   }
 }
+
+
+

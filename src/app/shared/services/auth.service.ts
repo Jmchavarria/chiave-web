@@ -32,6 +32,13 @@ export class AuthService {
     this.currentUserSignal.set(null);
   }
 
+  getToken(): string | null {
+    if (!isPlatformBrowser(this.platformId)) {
+      return null;
+    }
+    return localStorage.getItem('access_token');
+  }
+
   private getStoredUser(): UserModel | null {
     if (!isPlatformBrowser(this.platformId)) {
       return null;

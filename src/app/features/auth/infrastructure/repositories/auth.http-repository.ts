@@ -3,11 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { AuthRepository, loginResponse } from '../../domain/repositories/auth.repository';
-export interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-}
+import { ApiResponse } from '../../../../core/interfaces/api-response.interface';
 
 @Injectable({
   providedIn: 'root',

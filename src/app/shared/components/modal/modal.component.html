@@ -1,10 +1,54 @@
-@if (isOpen()) {
-  <div class="modal-backdrop" (click)="onClose()">
-    <div class="modal-container" (click)="$event.stopPropagation()">
-      <!-- Botón de cerrar genérico -->
-      <button class="modal__close" (click)="onClose()" aria-label="Cerrar">×</button>
+<div class="modal-backdrop" (mousedown)="handleBackdropMouseDown($event)">
+  <div
+    class="modal-container"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="title() ? 'modal-title' : null"
+  >
+    <!-- Cabecera fija: título, descripción y botón de cerrar -->
+    <header
+      class="modal-header"
+      [class.modal-header--titled]="title()"
+      [class.modal-header--tabbed]="tabs().length > 0"
+    >
+      @if (title()) {
+        <div class="modal-heading">
+          <h2 id="modal-title" class="modal-heading__title">{{ title() }}</h2>
+          @if (description()) {
+            <p class="modal-heading__text">{{ description() }}</p>
+          }
+        </div>
+      }
 
+      <button type="button" class="modal__close" (click)="handleCancel()" aria-label="Cerrar modal">
+        <ng-icon name="heroXMarkSolid" size="20" />
+      </button>
+    </header>
+
+    <!-- Pestañas (fijas, bajo la cabecera) -->
+    @if (tabs().length > 0) {
+      <div class="modal-tabs" role="tablist">
+        @for (tab of tabs(); track tab.id) {
+          <button
+            type="button"
+            role="tab"
+            class="modal-tab"
+            [class.modal-tab--active]="activeTab() === tab.id"
+            [attr.aria-selected]="activeTab() === tab.id"
+            (click)="selectTab(tab.id)"
+          >
+            {{ tab.label }}
+          </button>
+        }
+      </div>
+    }
+
+    <!-- Solo esto hace scroll -->
+    <div class="modal-body">
       <ng-content></ng-content>
     </div>
+
+    <!-- Pie fijo: lo que lleve el atributo [modal-footer] aparece aquí -->
+    <footer class="modal-footer"><ng-content select="[modal-footer]"></ng-content></footer>
   </div>
-}
+</div>

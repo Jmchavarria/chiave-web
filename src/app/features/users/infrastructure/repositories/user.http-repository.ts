@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { UserRepository } from '../../domain/repositories/user.repository';
 import { UserModel } from '../../domain/models/user.model';
-import { ApiResponse } from '../../../auth/infrastructure/repositories/auth.http-repository';
+import { ApiResponse } from '../../../../core/interfaces/api-response.interface';
 
 @Injectable({
   providedIn: 'root',

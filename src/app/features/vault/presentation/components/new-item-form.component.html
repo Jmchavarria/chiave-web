@@ -1,8 +1,3 @@
-<header class="head">
-  <h2 class="head__title">New item</h2>
-  <p class="head__sub">Your credentials are encrypted before being stored.</p>
-</header>
-
 <form class="form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
   <div class="field">
     <span class="label" id="type-label">Type</span>
@@ -12,29 +7,29 @@
           type="button"
           role="radio"
           class="type"
-          [class.type--active]="form.controls.type.value === t.value"
-          [attr.aria-checked]="form.controls.type.value === t.value"
+          [class.type--active]="type() === t.value"
+          [attr.aria-checked]="type() === t.value"
           (click)="setType(t.value)"
         >
-          <ng-icon [name]="t.icon" size="18" />
+          <ng-icon [name]="t.icon" size="22" />
           {{ t.label }}
         </button>
       }
     </div>
   </div>
 
-  <div class="field" [class.field--error]="showError('title')">
-    <label class="label" for="title">Title</label>
+  <div class="field" [class.field--error]="showError(form.controls.title)">
+    <label class="label" for="ni-title">Title</label>
     <input
       #titleInput
-      id="title"
+      id="ni-title"
       class="input"
       type="text"
       formControlName="title"
-      placeholder="e.g. GitHub, Netflix"
+      placeholder="e.g. GitHub, Netflix, Work laptop"
       autocomplete="off"
     />
-    @if (showError('title')) {
+    @if (showError(form.controls.title)) {
       <p class="error">
         <ng-icon name="heroExclamationCircleSolid" size="16" />
         Enter a title for this item.
@@ -42,90 +37,330 @@
     }
   </div>
 
-  <div class="field" [class.field--error]="showError('username')">
-    <label class="label" for="username">Username or email</label>
-    <input
-      id="username"
-      class="input"
-      type="text"
-      formControlName="username"
-      placeholder="you@example.com"
-      autocomplete="off"
-    />
-    @if (showError('username')) {
-      <p class="error">
-        <ng-icon name="heroExclamationCircleSolid" size="16" />
-        Enter a username or email.
-      </p>
-    }
-  </div>
+  @switch (type()) {
+    @case ('LOGIN') {
+      <div formGroupName="login">
+        <div class="field" [class.field--error]="showError(login.username)">
+          <label class="label" for="ni-username">Username or email</label>
+          <input
+            id="ni-username"
+            class="input"
+            type="text"
+            formControlName="username"
+            placeholder="you@example.com"
+            autocomplete="off"
+          />
+          @if (showError(login.username)) {
+            <p class="error">
+              <ng-icon name="heroExclamationCircleSolid" size="16" />
+              Enter a username or email.
+            </p>
+          }
+        </div>
 
-  <div class="field" [class.field--error]="showError('password')">
-    <label class="label" for="password">Password</label>
-    <div class="pw">
-      <input
-        id="password"
-        class="input"
-        [type]="showPassword() ? 'text' : 'password'"
-        formControlName="password"
-        placeholder="••••••••••••"
-        autocomplete="new-password"
-      />
-      <div class="pw__actions">
-        <button
-          type="button"
-          class="pw__btn"
-          (click)="generatePassword()"
-          aria-label="Generate a password"
-          title="Generate a password"
-        >
-          <ng-icon name="heroSparklesSolid" size="18" />
-        </button>
-        <button
-          type="button"
-          class="pw__btn"
-          (click)="showPassword.set(!showPassword())"
-          [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
-        >
-          <ng-icon [name]="showPassword() ? 'heroEyeSlashSolid' : 'heroEyeSolid'" size="18" />
-        </button>
+        <div class="field" [class.field--error]="showError(login.password)">
+          <label class="label" for="ni-password">Password</label>
+          <div class="pw">
+            <input
+              id="ni-password"
+              class="input"
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="••••••••••••"
+              autocomplete="new-password"
+            />
+            <div class="pw__actions">
+              <button
+                type="button"
+                class="pw__btn"
+                (click)="generatePassword()"
+                aria-label="Generate a password"
+                title="Generate a password"
+              >
+                <ng-icon name="heroSparklesSolid" size="18" />
+              </button>
+              <button
+                type="button"
+                class="pw__btn"
+                (click)="showPassword.set(!showPassword())"
+                [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+              >
+                <ng-icon [name]="showPassword() ? 'heroEyeSlashSolid' : 'heroEyeSolid'" size="18" />
+              </button>
+            </div>
+          </div>
+          @if (showError(login.password)) {
+            <p class="error">
+              <ng-icon name="heroExclamationCircleSolid" size="16" />
+              Enter a password or generate one.
+            </p>
+          }
+        </div>
+
+        <div class="field">
+          <label class="label" for="ni-totp">
+            Authenticator key <span class="label__opt">Optional</span>
+          </label>
+          <input
+            id="ni-totp"
+            class="input input--mono"
+            type="text"
+            formControlName="authenticatorKey"
+            placeholder="Setup key for two-factor codes"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+
+        <div class="field" [class.field--error]="showError(login.website)">
+          <label class="label" for="ni-website">
+            Website <span class="label__opt">Optional</span>
+          </label>
+          <input
+            id="ni-website"
+            class="input"
+            type="text"
+            formControlName="website"
+            placeholder="https://github.com"
+            autocomplete="off"
+          />
+          @if (showError(login.website)) {
+            <p class="error">
+              <ng-icon name="heroExclamationCircleSolid" size="16" />
+              Enter a valid address, like github.com.
+            </p>
+          }
+        </div>
       </div>
-    </div>
-    @if (showError('password')) {
-      <p class="error">
-        <ng-icon name="heroExclamationCircleSolid" size="16" />
-        Enter a password or generate one.
-      </p>
     }
-  </div>
 
-  <div class="field" [class.field--error]="showError('url')">
-    <label class="label" for="url">Website <span class="label__opt">Optional</span></label>
-    <input
-      id="url"
-      class="input"
-      type="text"
-      formControlName="url"
-      placeholder="https://github.com"
-      autocomplete="off"
-    />
-    @if (showError('url')) {
-      <p class="error">
-        <ng-icon name="heroExclamationCircleSolid" size="16" />
-        Enter a valid address, like github.com.
-      </p>
+    @case ('CARD') {
+      <div formGroupName="card">
+        <div class="field" [class.field--error]="showError(card.cardholderName)">
+          <label class="label" for="ni-holder">Cardholder name</label>
+          <input
+            id="ni-holder"
+            class="input"
+            type="text"
+            formControlName="cardholderName"
+            placeholder="Name as it appears on the card"
+            autocomplete="off"
+          />
+          @if (showError(card.cardholderName)) {
+            <p class="error">
+              <ng-icon name="heroExclamationCircleSolid" size="16" />
+              Enter the cardholder name.
+            </p>
+          }
+        </div>
+
+        <div class="field" [class.field--error]="showError(card.number)">
+          <label class="label" for="ni-number">Card number</label>
+          <input
+            id="ni-number"
+            class="input input--mono"
+            type="text"
+            inputmode="numeric"
+            formControlName="number"
+            placeholder="1234 5678 9012 3456"
+            autocomplete="off"
+          />
+          @if (showError(card.number)) {
+            <p class="error">
+              <ng-icon name="heroExclamationCircleSolid" size="16" />
+              @if (card.number.hasError('required')) {
+                Enter the card number.
+              } @else {
+                Enter a valid card number.
+              }
+            </p>
+          }
+        </div>
+
+        <div class="field">
+          <label class="label" for="ni-brand">Brand <span class="label__opt">Optional</span></label>
+          <input
+            id="ni-brand"
+            class="input"
+            type="text"
+            formControlName="brand"
+            placeholder="Visa, Mastercard, Amex…"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="grid grid--3">
+          <div class="field" [class.field--error]="showError(card.expMonth)">
+            <label class="label" for="ni-month">Month</label>
+            <input
+              id="ni-month"
+              class="input"
+              type="text"
+              inputmode="numeric"
+              maxlength="2"
+              formControlName="expMonth"
+              placeholder="MM"
+              autocomplete="off"
+            />
+            @if (showError(card.expMonth)) {
+              <p class="error">01 to 12.</p>
+            }
+          </div>
+
+          <div class="field" [class.field--error]="showError(card.expYear)">
+            <label class="label" for="ni-year">Year</label>
+            <input
+              id="ni-year"
+              class="input"
+              type="text"
+              inputmode="numeric"
+              maxlength="4"
+              formControlName="expYear"
+              placeholder="YYYY"
+              autocomplete="off"
+            />
+            @if (showError(card.expYear)) {
+              <p class="error">YY or YYYY.</p>
+            }
+          </div>
+
+          <div class="field" [class.field--error]="showError(card.cvv)">
+            <label class="label" for="ni-cvv">CVV</label>
+            <input
+              id="ni-cvv"
+              class="input"
+              type="password"
+              inputmode="numeric"
+              maxlength="4"
+              formControlName="cvv"
+              placeholder="•••"
+              autocomplete="off"
+            />
+            @if (showError(card.cvv)) {
+              <p class="error">3 or 4 digits.</p>
+            }
+          </div>
+        </div>
+      </div>
     }
-  </div>
 
-  <div class="field">
-    <label class="label" for="notes">Notes <span class="label__opt">Optional</span></label>
+    @case ('IDENTITY') {
+      <div formGroupName="identity">
+        @for (section of identitySections; track section.title) {
+          <h3 class="section">{{ section.title }}</h3>
+
+          <div class="grid">
+            @for (f of section.fields; track f.name) {
+              <div
+                class="field"
+                [class.field--full]="f.full"
+                [class.field--error]="f.name === 'email' && showError(identity.email)"
+              >
+                <label class="label" [for]="'ni-' + f.name">{{ f.label }}</label>
+
+                @if (f.name === 'courtesyTitle') {
+                  <select class="input" [id]="'ni-' + f.name" formControlName="courtesyTitle">
+                    <option value="">None</option>
+                    @for (t of courtesyTitles; track t.value) {
+                      <option [value]="t.value">{{ t.label }}</option>
+                    }
+                  </select>
+                } @else {
+                  <input
+                    class="input"
+                    [id]="'ni-' + f.name"
+                    type="text"
+                    [formControlName]="f.name"
+                    autocomplete="off"
+                  />
+                }
+
+                @if (f.name === 'email' && showError(identity.email)) {
+                  <p class="error">
+                    <ng-icon name="heroExclamationCircleSolid" size="16" />
+                    Enter a valid email address.
+                  </p>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @case ('SSH_KEY') {
+      <div formGroupName="sshKey">
+        <div class="field">
+          <label class="label" for="ni-public">
+            Public key <span class="label__opt">Optional</span>
+          </label>
+          <textarea
+            id="ni-public"
+            class="input input--area input--mono"
+            formControlName="publicKey"
+            rows="3"
+            placeholder="ssh-ed25519 AAAA…"
+            autocomplete="off"
+            spellcheck="false"
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label class="label" for="ni-private">
+            Private key <span class="label__opt">Optional</span>
+          </label>
+          <textarea
+            id="ni-private"
+            class="input input--area input--mono"
+            formControlName="privateKey"
+            rows="6"
+            placeholder="-----BEGIN OPENSSH PRIVATE KEY-----"
+            autocomplete="off"
+            spellcheck="false"
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label class="label" for="ni-fingerprint">
+            Fingerprint <span class="label__opt">Optional</span>
+          </label>
+          <input
+            id="ni-fingerprint"
+            class="input input--mono"
+            type="text"
+            formControlName="fingerPrint"
+            placeholder="SHA256:…"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+      </div>
+    }
+  }
+
+  <!-- Notas -->
+  <div class="field" [class.field--error]="showError(form.controls.notes)">
+    <label class="label" for="ni-notes">
+      {{ type() === 'SECURE_NOTE' ? 'Note' : 'Notes' }}
+      @if (type() !== 'SECURE_NOTE') {
+        <span class="label__opt">Optional</span>
+      }
+    </label>
     <textarea
-      id="notes"
+      id="ni-notes"
       class="input input--area"
       formControlName="notes"
-      rows="3"
-      placeholder="Anything else worth remembering"
+      [attr.rows]="type() === 'SECURE_NOTE' ? 8 : 3"
+      [placeholder]="
+        type() === 'SECURE_NOTE' ? 'Write your secure note here' : 'Anything else worth remembering'
+      "
     ></textarea>
+    @if (showError(form.controls.notes)) {
+      <p class="error">
+        <ng-icon name="heroExclamationCircleSolid" size="16" />
+        Write something in your note.
+      </p>
+    }
   </div>
 
   <label class="fav">
@@ -135,7 +370,7 @@
   </label>
 
   <footer class="foot">
-    <button type="button" class="btn btn--ghost" (click)="cancelled.emit()">Cancel</button>
+    <button type="button" class="btn btn--ghost" (click)="modalState.close()">Cancel</button>
     <button type="submit" class="btn">Save item</button>
   </footer>
 </form>
