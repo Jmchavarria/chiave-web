@@ -3,7 +3,6 @@ import {
   Component,
   ElementRef,
   afterNextRender,
-  inject,
   output,
   signal,
   viewChild,
@@ -12,6 +11,7 @@ import {
 import {
   AbstractControl,
   FormBuilder,
+  FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
@@ -84,11 +84,6 @@ export class NewItemFormComponent implements OnInit {
   readonly saved = output<CreateVaultProps>();
   readonly cancelled = output<void>();
 
-  private readonly fb = inject(FormBuilder);
-
-  // Inyectamos el servicio de estado local del modal
-  readonly modalState = inject(VaultModalService);
-
   readonly types: { value: VaultItemTypeEnum; label: string; icon: string }[] = [
     { value: VaultItemTypeEnum.LOGIN, label: 'Login', icon: 'heroGlobeAltSolid' },
     { value: VaultItemTypeEnum.CARD, label: 'Card', icon: 'heroCreditCardSolid' },
@@ -151,71 +146,32 @@ export class NewItemFormComponent implements OnInit {
     },
   ];
 
-  readonly form = this.fb.nonNullable.group({
-    title: ['', [Validators.required, Validators.maxLength(100)]],
-    notes: ['', Validators.maxLength(5000)],
-    isFavorite: [false],
-
-    login: this.fb.nonNullable.group({
-      username: ['', [Validators.required, Validators.maxLength(254)]],
-      password: ['', [Validators.required, Validators.maxLength(128)]],
-      authenticatorKey: ['', Validators.maxLength(256)],
-      website: ['', [Validators.maxLength(2048), Validators.pattern(URL_PATTERN)]],
-    }),
-
-    card: this.fb.nonNullable.group({
-      cardholderName: ['', [Validators.required, Validators.maxLength(100)]],
-      brand: ['', Validators.maxLength(30)],
-      number: ['', [Validators.required, cardNumberValidator]],
-      expMonth: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])$/)]],
-      expYear: ['', [Validators.required, Validators.pattern(/^([0-9]{2}|[0-9]{4})$/)]],
-      cvv: ['', [Validators.required, Validators.pattern(/^[0-9]{3,4}$/)]],
-    }),
-
-    identity: this.fb.nonNullable.group({
-      courtesyTitle: [''],
-      firstName: [''],
-      middleName: [''],
-      lastName: [''],
-      identityUsername: [''],
-      company: [''],
-      ssn: [''],
-      passportNumber: [''],
-      licenseNumber: [''],
-      email: ['', [Validators.email, Validators.maxLength(254)]],
-      phone: [''],
-      address1: [''],
-      address2: [''],
-      address3: [''],
-      city: [''],
-      state: [''],
-      postalCode: [''],
-      country: [''],
-    }),
-
-    sshKey: this.fb.nonNullable.group({
-      publicKey: [''],
-      privateKey: [''],
-      fingerPrint: [''],
-    }),
-  });
-
-  readonly login = this.form.controls.login.controls;
-  readonly card = this.form.controls.card.controls;
-  readonly identity = this.form.controls.identity.controls;
-
   readonly type = signal<VaultItemTypeEnum>(VaultItemTypeEnum.LOGIN);
   readonly showPassword = signal(false);
   isSubmitted = false;
 
+  vualtForm: ReturnType<typeof this.buildForm>;
+
+  readonly login: ReturnType<typeof this.buildForm>['controls']['login']['controls'];
+  readonly card: ReturnType<typeof this.buildForm>['controls']['card']['controls'];
+  readonly identity: ReturnType<typeof this.buildForm>['controls']['identity']['controls'];
+
   private readonly titleInput = viewChild<ElementRef<HTMLInputElement>>('titleInput');
 
-  constructor() {
+  constructor(
+    private readonly modalState: VaultModalService,
+    private readonly fb: FormBuilder,
+  ) {
+    this.vualtForm = this.buildForm();
+
+    this.login = this.vualtForm.controls.login.controls;
+    this.card = this.vualtForm.controls.card.controls;
+    this.identity = this.vualtForm.controls.identity.controls;
+
     afterNextRender(() => this.titleInput()?.nativeElement.focus());
   }
 
   ngOnInit(): void {
-    // Sincronizamos el tipo inicial y precargamos datos si estamos editando
     const activeType = this.modalState.activeType();
     const vaultToEdit = this.modalState.selectedVault();
 
@@ -223,7 +179,7 @@ export class NewItemFormComponent implements OnInit {
     this.applyType(activeType);
 
     if (vaultToEdit) {
-      this.form.patchValue(vaultToEdit);
+      this.vualtForm.patchValue(vaultToEdit);
     }
   }
 
@@ -235,8 +191,6 @@ export class NewItemFormComponent implements OnInit {
     this.type.set(type);
     this.isSubmitted = false;
     this.applyType(type);
-
-    // Notificamos al servicio local el cambio de tipo para actualizar el título del modal al instante
     this.modalState.setActiveType(type);
   }
 
@@ -252,16 +206,67 @@ export class NewItemFormComponent implements OnInit {
   onSubmit(): void {
     this.isSubmitted = true;
 
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+    if (this.vualtForm.invalid) {
+      this.vualtForm.markAllAsTouched();
       return;
     }
 
     this.saved.emit(this.buildPayload());
   }
 
+  private buildForm() {
+    return this.fb.nonNullable.group({
+      title: ['', [Validators.required, Validators.maxLength(100)]],
+      notes: ['', Validators.maxLength(5000)],
+      isFavorite: [false],
+
+      login: this.fb.nonNullable.group({
+        username: ['', [Validators.required, Validators.maxLength(254)]],
+        password: ['', [Validators.required, Validators.maxLength(128)]],
+        authenticatorKey: ['', Validators.maxLength(256)],
+        website: ['', [Validators.maxLength(2048), Validators.pattern(URL_PATTERN)]],
+      }),
+
+      card: this.fb.nonNullable.group({
+        cardholderName: ['', [Validators.required, Validators.maxLength(100)]],
+        brand: ['', Validators.maxLength(30)],
+        number: ['', [Validators.required, cardNumberValidator]],
+        expMonth: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])$/)]],
+        expYear: ['', [Validators.required, Validators.pattern(/^([0-9]{2}|[0-9]{4})$/)]],
+        cvv: ['', [Validators.required, Validators.pattern(/^[0-9]{3,4}$/)]],
+      }),
+
+      identity: this.fb.nonNullable.group({
+        courtesyTitle: [''],
+        firstName: [''],
+        middleName: [''],
+        lastName: [''],
+        identityUsername: [''],
+        company: [''],
+        ssn: [''],
+        passportNumber: [''],
+        licenseNumber: [''],
+        email: ['', [Validators.email, Validators.maxLength(254)]],
+        phone: [''],
+        address1: [''],
+        address2: [''],
+        address3: [''],
+        city: [''],
+        state: [''],
+        postalCode: [''],
+        country: [''],
+      }),
+
+      sshKey: this.fb.nonNullable.group({
+        publicKey: [''],
+        privateKey: [''],
+        fingerPrint: [''],
+      }),
+    });
+  }
+
   private applyType(type: VaultItemTypeEnum): void {
-    const { login, card, identity, sshKey } = this.form.controls;
+    const { login, card, identity, sshKey } = this.vualtForm.controls;
     const groups = { LOGIN: login, CARD: card, IDENTITY: identity, SSH_KEY: sshKey };
 
     for (const [key, group] of Object.entries(groups)) {
@@ -269,7 +274,7 @@ export class NewItemFormComponent implements OnInit {
       else group.disable();
     }
 
-    const notes = this.form.controls.notes;
+    const notes = this.vualtForm.controls.notes;
     notes.setValidators(
       type === 'SECURE_NOTE'
         ? [Validators.required, Validators.maxLength(5000)]
@@ -279,7 +284,7 @@ export class NewItemFormComponent implements OnInit {
   }
 
   private buildPayload(): CreateVaultProps {
-    const { title, notes, isFavorite, login, card, identity, sshKey } = this.form.getRawValue();
+    const { title, notes, isFavorite, login, card, identity, sshKey } = this.vualtForm.getRawValue();
     const type = this.type();
 
     const byType = {

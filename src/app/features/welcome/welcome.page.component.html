@@ -16,12 +16,14 @@
   <app-logo-tile class="slot slot--i" aria-hidden="true" />
 </main>
 
-<!-- <app-modal [isOpen]="view() !== 'landing'" (closed)="close()">
-  @if (view() === 'login') {
-    <app-login (createAccount)="view.set('register')"></app-login>
-  }
+@if (view() === 'login' || view() === 'register') {
+  <app-modal (onCancel)="close()">
+    @if (view() === 'login') {
+      <app-login (createAccount)="view.set('register')" />
+    }
 
-  @if (view() === 'register') {
-    <app-register (signIn)="view.set('login')"></app-register>
-  }
-</app-modal> -->
+    @if (view() === 'register') {
+      <app-register (signIn)="view.set('login')" />
+    }
+  </app-modal>
+}

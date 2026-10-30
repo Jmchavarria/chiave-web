@@ -39,7 +39,7 @@ import { VaultModalService } from '../../services/vault-modal.service';
   standalone: true,
   imports: [NgIcon, DatePipe, ModalComponent, NewItemFormComponent],
   providers: [
-    VaultModalService, // <--- Proveedor local para el ciclo de vida del modal de esta vista
+    VaultModalService,
     provideIcons({
       heroCheckSolid,
       heroClipboardDocumentSolid,
@@ -64,14 +64,12 @@ export class VaultComponent implements OnInit {
   private errorTimer: ReturnType<typeof setTimeout> | null = null;
   isLoading = signal<boolean>(false);
 
-  // Inyección del servicio de estado local del modal
-  readonly modalState = inject(VaultModalService);
-
   constructor(
     private readonly findVaultByUserIdUseCase: FindVaultByUserIdUseCase,
     private readonly updateVaultUseCase: UpdateVaultUseCase,
     private readonly authService: AuthService,
     private readonly createVaultUseCase: CreateVaultUseCase,
+    private readonly modalState: VaultModalService,
   ) {
     this.user = this.authService.currentUser();
   }
@@ -149,7 +147,6 @@ export class VaultComponent implements OnInit {
       });
   }
 
-  // Métodos expuestos para abrir el modal usando el servicio local
   openCreate(type: VaultItemTypeEnum = VaultItemTypeEnum.LOGIN) {
     this.modalState.openCreate(type);
   }
@@ -189,10 +186,6 @@ export class VaultComponent implements OnInit {
     } catch {}
   }
 
-  showerForm(): void {
-    this.showForm.set(true);
-  }
-
   initial(item: VaultModel): string {
     return item.title.charAt(0).toUpperCase();
   }
@@ -218,6 +211,8 @@ export class VaultComponent implements OnInit {
       this.pendingFavorites.delete(item.id);
     }
   }
+
+
 
   private setFavorite(id: number, isFavorite: boolean): void {
     this.vaultItems.update((page) => ({

@@ -29,10 +29,10 @@ export type AuthView = 'landing' | 'login' | 'register' | 'verify';
     StatementTileComponent,
     TotpTileComponent,
     VaultTileComponent,
-    ModalComponent,
-    LoginComponent,
     RegisterComponent,
-  ],
+    ModalComponent,
+    LoginComponent
+],
   templateUrl: './welcome.page.component.html',
   styleUrl: './welcome.page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

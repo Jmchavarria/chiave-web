@@ -33,7 +33,6 @@ const SAMPLE_ITEMS: VaultItem[] = [
 export class VaultTileComponent {
   readonly items = input<VaultItem[]>(SAMPLE_ITEMS);
   readonly copyPassword = output<VaultItem>();
-
   protected readonly copiedId = signal<string | null>(null);
   private timer?: ReturnType<typeof setTimeout>;
 
