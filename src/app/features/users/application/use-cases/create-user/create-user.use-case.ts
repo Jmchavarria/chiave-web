@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { UserModel } from '../../domain/models/user.model';
-import { UserRepository } from '../../domain/repositories/user.repository';
+import { UserModel } from '../../../domain/models/user.model';
+import { UserRepository } from '../../../domain/repositories/user.repository';
 
 @Injectable({
   providedIn: 'root',

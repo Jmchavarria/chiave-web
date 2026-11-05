@@ -2,7 +2,6 @@ import { Component, output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginUseCase } from '../../../application/use-cases/login.use-case';
-import { AuthSessionService } from '../../../application/auth-session.service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroEyeSlashSolid, heroEyeSolid } from '@ng-icons/heroicons/solid';
 import { AuthService } from '../../../../../shared/services/auth.service';
@@ -32,7 +31,6 @@ export class LoginComponent {
   constructor(
     private readonly fb: FormBuilder,
     private readonly loginUseCase: LoginUseCase,
-    private readonly authSessionService: AuthSessionService,
     private readonly authService: AuthService,
     private readonly router: Router,
   ) {
@@ -57,8 +55,7 @@ export class LoginComponent {
     this.loginUseCase
       .execute(email, password)
       .then((response) => {
-        this.authSessionService.setSession(response.authSession);
-        this.authService.setUser(response.user, response.authSession.accessToken);
+        this.authService.setSession(response.accessToken, response.user);
 
         this.router.navigate(['/app/vault']);
       })
@@ -81,5 +78,5 @@ export class LoginComponent {
       .finally(() => {
         this.isLoading.set(false);
       });
-  }
+  } 
 }

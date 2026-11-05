@@ -18,4 +18,8 @@ export class UserHttpRepository implements UserRepository {
     );
     return response.data;
   }
+
+  async delete(): Promise<void> {
+    await firstValueFrom(this.http.delete<void>(`${environment.apiUrl}/users/me`));
+  }
 }

@@ -52,7 +52,7 @@
       <span class="label">Settings</span>
     </a>
 
-    <div class="user">
+    <div class="user" routerLink="/profile" title="Profile">
       <span class="user__avatar" aria-hidden="true">{{ initials() }}</span>
       <div class="user__info label">
         <p class="user__name">{{ userName() }}</p>
@@ -63,7 +63,7 @@
       <button
         type="button"
         class="user__logout"
-        (click)="logout.emit()"
+        (click)="$event.stopPropagation(); logout.emit()"
         aria-label="Sign out"
         title="Sign out"
       >

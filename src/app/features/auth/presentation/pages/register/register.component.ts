@@ -1,6 +1,5 @@
 import { toSignal } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { CreateUserUseCase } from '../../../../users/application/use-cases/create-user.use-case';
 import { CreateUserForm } from '../../../../users/types/user.type';
 import { ApiErrorPayload } from '../../../../../shared/infrastructure/http/api-error.response';
 import { Component, Signal, computed, output, signal } from '@angular/core';
@@ -12,6 +11,7 @@ import {
   PASSWORD_RULES,
   passwordRulesValidator,
 } from '../../../../../shared/utils/password-rules';
+import { CreateUserUseCase } from '../../../../users/application/use-cases/create-user/create-user.use-case';
 
 @Component({
   selector: 'app-register',

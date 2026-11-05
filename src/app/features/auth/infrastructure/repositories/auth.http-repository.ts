@@ -14,7 +14,11 @@ export class AuthHttpRepository extends AuthRepository {
 
   async login(email: string, password: string): Promise<loginResponse> {
     const response = await firstValueFrom(
-      this.http.post<ApiResponse<loginResponse>>(`${this.apiUrl}/auth/login`, { email, password }),
+      this.http.post<ApiResponse<loginResponse>>(
+        `${this.apiUrl}/auth/login`,
+        { email, password },
+        { withCredentials: true },
+      ),
     );
 
     return response.data;

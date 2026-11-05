@@ -2,10 +2,7 @@ import { UserModel } from '../../../users/domain/models/user.model';
 import { AuthSession } from '../models/auth-session.model';
 
 export interface loginResponse {
-  authSession: {
-    accessToken: string;
-    refreshToken: string;
-  };
+  accessToken: string;
   user: UserModel;
 }
 export abstract class AuthRepository {

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   // 1. Rutas públicas
@@ -44,13 +45,20 @@ export const routes: Routes = [
     path: 'app',
     loadComponent: () =>
       import('./core/components/layout/layout.component').then((m) => m.LayoutComponent),
-    // canActivate: [authGuard], // <-- Aquí conectarás tu AuthGuard a futuro
+    canActivate: [authGuard],
     children: [
       {
         path: 'vault',
         loadComponent: () =>
           import('./features/vault/presentation/pages/vault.component').then(
             (m) => m.VaultComponent,
+          ),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/profile/presentation/pages/profile.component').then(
+            (m) => m.ProfileComponent,
           ),
       },
       {

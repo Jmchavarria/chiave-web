@@ -1,0 +1,113 @@
+<main class="profile">
+  <header class="profile__head">
+    <h1 class="profile__title">Profile</h1>
+    <p class="profile__sub">Your account details and security settings.</p>
+  </header>
+
+  <!-- Cuenta -->
+  <section class="card" aria-labelledby="account-title">
+    <h2 id="account-title" class="card__title">Account</h2>
+
+    <div class="identity">
+      <div class="avatar" aria-hidden="true">{{ initial }}</div>
+      <div class="identity__text">
+        <p class="identity__name">{{ user?.name }}</p>
+        <p class="identity__email">{{ user?.email }}</p>
+      </div>
+    </div>
+
+    <dl class="details">
+      <div class="details__row">
+        <dt>Name</dt>
+        <dd>{{ user?.name }}</dd>
+      </div>
+      <div class="details__row">
+        <dt>Email</dt>
+        <dd>{{ user?.email }}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- Zona de peligro -->
+  <section class="danger" aria-labelledby="danger-title">
+    <div class="danger__text">
+      <h2 id="danger-title" class="danger__title">
+        <ng-icon name="heroExclamationTriangleSolid" size="20" />
+        Delete account
+      </h2>
+      <p class="danger__desc">
+        Permanently deletes your account and every item in your vault. This can’t be undone.
+      </p>
+    </div>
+    <button type="button" class="btn btn--danger" (click)="openDelete()">
+      <ng-icon name="heroTrashSolid" size="16" />
+      Delete account
+    </button>
+  </section>
+</main>
+
+@if (showDelete()) {
+  <app-modal
+    [title]="'Delete your account?'"
+    [description]="'All your passwords and data will be erased forever.'"
+    size="md"
+    (onCancel)="closeDelete()"
+  >
+    <form
+      id="delete-account-form"
+      class="form"
+      [formGroup]="deleteForm"
+      (ngSubmit)="confirmDelete()"
+      novalidate
+    >
+      @if (serverError(); as message) {
+        <div class="alert" role="alert">{{ message }}</div>
+      }
+
+      <div class="field">
+        <label class="label" for="del-confirm">
+          Type <strong>{{ confirmWord }}</strong> to confirm
+        </label>
+        <input
+          id="del-confirm"
+          class="input"
+          type="text"
+          formControlName="confirmText"
+          autocomplete="off"
+          [placeholder]="confirmWord"
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="del-password">Master password</label>
+        <input
+          id="del-password"
+          class="input"
+          type="password"
+          formControlName="password"
+          autocomplete="current-password"
+          placeholder="Your master password"
+        />
+      </div>
+    </form>
+
+    <button
+      modal-footer
+      type="button"
+      class="btn btn--ghost"
+      [disabled]="deleting()"
+      (click)="closeDelete()"
+    >
+      Cancel
+    </button>
+    <button
+      modal-footer
+      type="submit"
+      form="delete-account-form"
+      class="btn btn--danger"
+      [disabled]="deleteForm.invalid || deleting()"
+    >
+      {{ deleting() ? 'Deleting…' : 'Delete forever' }}
+    </button>
+  </app-modal>
+}
