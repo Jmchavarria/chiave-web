@@ -51,8 +51,6 @@ interface NavSection {
 export class SidebarComponent {
   readonly userName = input('User');
   readonly userEmail = input('');
-
-  readonly newItem = output<void>();
   readonly logout = output<void>();
 
   readonly initials = computed(
@@ -69,7 +67,7 @@ export class SidebarComponent {
     {
       title: 'Vault',
       items: [
-        { label: 'All items', icon: 'heroLockClosedSolid', link: '/vault', exact: true },
+        { label: 'All items', icon: 'heroLockClosedSolid', link: '/app/vault', exact: true },
         { label: 'Favorites', icon: 'heroStarSolid', link: '/vault/favorites' },
       ],
     },

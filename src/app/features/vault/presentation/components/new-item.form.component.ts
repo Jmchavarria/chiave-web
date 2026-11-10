@@ -193,6 +193,7 @@ export class NewItemFormComponent implements OnInit {
     this.modalState.setActiveType(type);
   }
 
+  // esto lo podemos usar de manera global para la seccion de generador de contraseñas del sidebar. (se podria reutilizar)
   generatePassword(): void {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*-_';
     const values = crypto.getRandomValues(new Uint32Array(18));
@@ -283,7 +284,8 @@ export class NewItemFormComponent implements OnInit {
   }
 
   private buildPayload(): CreateVaultProps {
-    const { title, notes, isFavorite, login, card, identity, sshKey } = this.vualtForm.getRawValue();
+    const { title, notes, isFavorite, login, card, identity, sshKey } =
+      this.vualtForm.getRawValue();
     const type = this.type();
 
     const byType = {

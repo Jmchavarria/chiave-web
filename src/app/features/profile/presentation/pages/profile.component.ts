@@ -21,10 +21,8 @@ const CONFIRM_WORD = 'DELETE';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileComponent {
-  // Corregido: ya no dice deletFoerm
   readonly deleteForm: FormGroup;
   readonly user: UserModel | null = null;
-
   readonly confirmWord = CONFIRM_WORD;
   readonly showDelete = signal(false);
   readonly deleting = signal(false);
@@ -69,7 +67,6 @@ export class ProfileComponent {
     this.serverError.set(null);
 
     try {
-      // Si tu caso de uso o servicio HTTP necesita enviar la contraseña al backend:
       const { password } = this.deleteForm.getRawValue();
       await this.deleteUserUseCase.execute(password);
 

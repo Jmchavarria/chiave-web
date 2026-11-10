@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FindByUserId, VaultRepository } from '../../../domain/repositories/vault.repository';
-import { PaginatedResult } from '../../../../../core/types/paginated-response';
 import { VaultModel } from '../../../domain/models/vault.model';
+import { PaginatedApiResponse } from '../../../../../core/interfaces/api-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +9,7 @@ import { VaultModel } from '../../../domain/models/vault.model';
 export class FindVaultByUserIdUseCase {
   constructor(private readonly repository: VaultRepository) {}
 
-  async execute(filters?: FindByUserId): Promise<PaginatedResult<VaultModel>> {
-    return await this.repository.findByUserId(filters);
+  execute(filters?: FindByUserId): Promise<PaginatedApiResponse<VaultModel>> {
+    return this.repository.findByUserId(filters);
   }
 }

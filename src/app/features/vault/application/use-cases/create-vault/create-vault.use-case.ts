@@ -9,7 +9,7 @@ import { ApiResponse } from '../../../../../core/interfaces/api-response.interfa
 export class CreateVaultUseCase {
   constructor(private readonly repository: VaultRepository) {}
 
-  public async execute(input: CreateVaultProps): Promise<ApiResponse<VaultModel>> {
+  execute(input: CreateVaultProps): Promise<ApiResponse<VaultModel>> {
     return this.repository.save(input);
   }
 }

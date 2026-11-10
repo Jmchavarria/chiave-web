@@ -2,6 +2,19 @@ $lime: var(--chv-lime, #dde392);
 $black: var(--chv-black, #080705);
 $danger: var(--chv-danger, #ff8f7e);
 
+// Visualmente oculto pero leído por lectores de pantalla
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 :host {
   display: block;
 }
@@ -13,6 +26,10 @@ $danger: var(--chv-danger, #ff8f7e);
   max-width: 1100px;
   margin: 0 auto;
   color: #fff;
+}
+
+.sr-only {
+  @include visually-hidden;
 }
 
 // ── Encabezado ─────────────────────────────────────
@@ -105,7 +122,6 @@ $danger: var(--chv-danger, #ff8f7e);
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
-  box-shadow: 0 10px 24px -12px rgba(221, 227, 146, 0.6);
   transition:
     background-color 0.15s,
     transform 0.15s;
@@ -118,6 +134,27 @@ $danger: var(--chv-danger, #ff8f7e);
   &:focus-visible {
     outline: 2px solid $lime;
     outline-offset: 2px;
+  }
+
+  // estado deshabilitado (botones de los modales)
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+// botón secundario, sin variables para que funcione dentro del modal
+.btn--ghost {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: none;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.06);
+    transform: none;
   }
 }
 
@@ -197,6 +234,322 @@ $danger: var(--chv-danger, #ff8f7e);
   }
 }
 
+// ── Disposición: barra de carpetas + lista ─────────
+.workspace {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  transition: grid-template-columns 0.2s;
+
+  // barra contraída: queda una columna angosta de iconos
+  &--collapsed {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  // pantallas angostas: la barra se apila encima de la lista
+  @media (max-width: 860px) {
+    grid-template-columns: minmax(0, 1fr);
+
+    &--collapsed {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
+
+// ── Barra lateral de carpetas ──────────────────────
+.folders {
+  position: sticky;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 32px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(64, 67, 78, 0.14);
+
+  &__head {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px;
+  }
+
+  &__toggle {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: #fff;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.15s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    &:focus-visible {
+      outline: 2px solid $lime;
+      outline-offset: 2px;
+    }
+  }
+
+  &__chevron {
+    flex: none;
+    display: inline-flex;
+    transition: transform 0.2s;
+  }
+
+  // nuevo folder: botón de solo icono (nombre accesible vía aria-label)
+  &__add {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px dashed rgba(255, 255, 255, 0.22);
+    border-radius: 12px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    transition: background-color 0.15s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    &:focus-visible {
+      outline: 2px solid $lime;
+      outline-offset: 2px;
+    }
+  }
+
+  &__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 4px 8px 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  // filtro de carpetas (solo con muchas)
+  &__search {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    margin: 8px 0 4px;
+    padding: 0 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.55);
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
+
+    &:focus-within {
+      border-color: $lime;
+      box-shadow: 0 0 0 3px rgba(221, 227, 146, 0.16);
+      color: $lime;
+    }
+  }
+
+  &__filter {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #fff;
+    font: inherit;
+    font-size: 14px;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.45);
+    }
+  }
+
+  // la lista scrollea por dentro; la barra queda fija mientras scrolleas la página
+  &__list {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    align-content: start;
+    gap: 2px;
+    margin: 0;
+    padding: 6px 0 0;
+    overflow-y: auto;
+    list-style: none;
+    scrollbar-width: thin;
+    scrollbar-color: #40434e transparent;
+  }
+
+  &__hint {
+    flex: none;
+    margin: 10px 12px 2px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.55);
+  }
+}
+
+// El chevron indica la acción: ‹ contraer / › expandir (en pantalla angosta: ˅ / ›)
+.folders__toggle[aria-expanded='true'] .folders__chevron {
+  transform: rotate(90deg);
+}
+
+.folders__toggle[aria-expanded='false'] .folders__chevron {
+  transform: rotate(-90deg);
+}
+
+// Rail contraído (solo en escritorio): dos botones de icono apilados
+@media (min-width: 861px) {
+  .folders--collapsed {
+    .folders__head {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .folders__toggle {
+      flex: none;
+      width: 40px;
+      padding: 0;
+      justify-content: center;
+    }
+
+    // el nombre "Folders" sigue ahí para lectores de pantalla, solo se oculta a la vista
+    .folders__label {
+      @include visually-hidden;
+    }
+  }
+}
+
+// Pantallas angostas: la barra deja de ser fija y su lista tiene altura propia
+@media (max-width: 860px) {
+  .folders {
+    position: static;
+    max-height: none;
+  }
+
+  .folders__list {
+    max-height: 280px;
+  }
+
+  .folders__toggle[aria-expanded='true'] .folders__chevron {
+    transform: rotate(0deg);
+  }
+}
+
+.folder {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+  }
+
+  // dentro de un contenedor con scroll, el contorno va hacia adentro para que no se recorte
+  &:focus-visible {
+    outline: 2px solid $lime;
+    outline-offset: -2px;
+  }
+
+  &__name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__count {
+    min-width: 24px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 12px;
+    text-align: center;
+  }
+
+  // La carpeta activa se distingue por color, negrita y barra lateral (no solo por color)
+  &--active {
+    background: rgba(221, 227, 146, 0.12);
+    color: $lime;
+    font-weight: 600;
+
+    &:hover {
+      color: $lime;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 3px;
+      height: 18px;
+      transform: translateY(-50%);
+      border-radius: 0 4px 4px 0;
+      background: $lime;
+    }
+
+    .folder__count {
+      background: rgba(221, 227, 146, 0.2);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workspace,
+  .folders__chevron {
+    transition: none;
+  }
+}
+
+// Modo de alto contraste: el fondo translúcido desaparece, así que marcamos con contorno
+@media (forced-colors: active) {
+  .folder--active,
+  .pick:has(.pick__input:checked) {
+    outline: 2px solid Highlight;
+  }
+}
+
 // ── Lista ──────────────────────────────────────────
 .list {
   display: flex;
@@ -259,6 +612,20 @@ $danger: var(--chv-danger, #ff8f7e);
     color: rgba(255, 255, 255, 0.5);
   }
 
+  &__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: rgba(221, 227, 146, 0.1);
+    color: $lime;
+    font-size: 11px;
+    font-weight: 500;
+    vertical-align: middle;
+  }
+
   &__category,
   &__date {
     font-size: 13px;
@@ -272,8 +639,8 @@ $danger: var(--chv-danger, #ff8f7e);
     justify-content: flex-end;
   }
 
-  // en pantallas medianas y pequeñas se ocultan columnas secundarias
-  @media (max-width: 900px) {
+  // con la barra de carpetas al lado hay menos ancho: se ocultan columnas secundarias antes
+  @media (max-width: 1180px) {
     grid-template-columns: 44px minmax(0, 1fr) auto;
 
     &__category,
@@ -342,5 +709,111 @@ $danger: var(--chv-danger, #ff8f7e);
   }
 }
 
+// ── Modal "Move to folder": radios nativos ─────────
+.pick-set {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
 
+.pick {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
 
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  // el radio nativo cubre toda la tarjeta: invisible pero enfocable y clicable
+  &__input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  &__label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__check {
+    flex: none;
+  }
+}
+
+.pick:has(.pick__input:checked) {
+  border-color: rgba(221, 227, 146, 0.5);
+  background: rgba(221, 227, 146, 0.1);
+  color: $lime;
+}
+
+.pick:has(.pick__input:focus-visible) {
+  outline: 2px solid $lime;
+  outline-offset: 2px;
+}
+
+.pick-empty {
+  margin: 16px 0 12px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+// ── Formulario de nueva carpeta ────────────────────
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.input {
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  font: inherit;
+
+  &:focus {
+    outline: 2px solid $lime;
+    outline-offset: 1px;
+  }
+}
+
+.alert {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 143, 126, 0.4);
+  background: rgba(255, 143, 126, 0.1);
+  color: $danger;
+  font-size: 13px;
+}

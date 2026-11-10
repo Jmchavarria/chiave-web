@@ -1,20 +1,19 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
-import { environment } from '../../../../../environments/environment';
-import {
-  ApiResponse,
-  PaginatedApiResponse,
-} from '../../../../core/interfaces/api-response.interface';
-import { AuthService } from '../../../../shared/services/auth.service';
-import { UserModel } from '../../../users/domain/models/user.model';
-import { VaultModel } from '../../domain/models/vault.model';
 import {
   CreateVaultProps,
   FindByUserId,
   UpdateVaultProps,
   VaultRepository,
 } from '../../domain/repositories/vault.repository';
+import {
+  ApiResponse,
+  PaginatedApiResponse,
+} from '../../../../core/interfaces/api-response.interface';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../../../environments/environment';
+import { AuthService } from '../../../../shared/services/auth.service';
+import { VaultModel } from '../../domain/models/vault.model';
 
 @Injectable({
   providedIn: 'root',

@@ -22,6 +22,8 @@ import { VaultHttpRepository } from './features/vault/infrastructure/repositorie
 
 import { authInterceptor } from './features/auth/infrastructure/interceptors/auth.interceptor';
 import { AuthService } from './shared/services/auth.service';
+import { FolderRepository } from './features/folders/domain/repositories/folder.repository';
+import { FolderHttpRepository } from './features/folders/infrastructure/repositories/folder.http-repository';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,8 +34,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authInterceptor])),
 
     provideAppInitializer(() => {
-      console.log('🚀 Ejecutando inicializador de autenticación');
-
       return inject(AuthService).initializeSession();
     }),
 
@@ -48,6 +48,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: VaultRepository,
       useExisting: VaultHttpRepository,
+    },
+    {
+      provide: FolderRepository,
+      useExisting: FolderHttpRepository,
     },
   ],
 };

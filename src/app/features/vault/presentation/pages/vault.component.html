@@ -1,22 +1,11 @@
 <section class="vault">
   <header class="head">
     <div>
-      <h1 class="head__title">All items</h1>
-      <p class="head__sub">{{ vaultItems().total }} items protected in your vault</p>
+      <!-- <h1 class="head__title">{{ pageTitle() }}</h1> -->
+      <p class="head__sub">{{ visibleItems().length }} items protected in your vault</p>
     </div>
 
     <div class="head__actions">
-      <label class="search">
-        <ng-icon name="heroMagnifyingGlassSolid" size="18" />
-        <input
-          type="search"
-          class="search__input"
-          placeholder="Search your vault..."
-          aria-label="Search your vault"
-        />
-      </label>
-
-      <!-- Llamamos al método openCreate() que ahora usa el servicio local -->
       <button type="button" class="btn" (click)="openCreate()">
         <ng-icon name="heroPlusSolid" size="18" />
         New item
@@ -24,83 +13,168 @@
     </div>
   </header>
 
-  <!-- <div class="bento">
-    <article class="tile tile--main">
-      <span class="tile__icon"><ng-icon name="heroLockClosedSolid" size="22" /></span>
-      <p class="tile__label">Total items</p>
-      <p class="tile__value">{{ vaultItems().total }}</p>
-      <p class="tile__hint">Encrypted and ready to use</p>
-    </article>
+  <!-- Anuncian a lectores de pantalla los cambios de filtro -->
+  <p class="sr-only" role="status" aria-live="polite">{{ statusMessage() }}</p>
+  <!-- <p class="sr-only" role="status" aria-live="polite">{{ folderFilterMessage() }}</p> -->
 
-    <article class="tile">
-      <span class="tile__icon"><ng-icon name="heroGlobeAltSolid" size="22" /></span>
-      <p class="tile__label">Logins</p>
-      <p class="tile__value">{{ loginCount() }}</p>
-      <p class="tile__hint">Sites and apps</p>
-    </article>
+  <div class="workspace" [class.workspace--collapsed]="!foldersOpen()">
+    <!-- Barra lateral de carpetas (patrón disclosure para contraerla) -->
+    <aside
+      class="folders"
+      [class.folders--collapsed]="!foldersOpen()"+
+      aria-labelledby="folders-title"
+    >
+      <div class="folders__head">
+        <button
+          id="folders-toggle"
+          type="button"
+          class="folders__toggle"
+          [attr.aria-expanded]="foldersOpen()"
+          aria-controls="folders-body"
+          (click)="toggleFolders()"
+        >
+          <ng-icon
+            name="heroChevronDownSolid"
+            size="16"
+            class="folders__chevron"
+            aria-hidden="true"
+          />
+          <span id="folders-title" class="folders__label">Folders</span>
+        </button>
 
-    <article class="tile">
-      <span class="tile__icon"><ng-icon name="heroStarSolid" size="22" /></span>
-      <p class="tile__label">Favorites</p>
-      <p class="tile__value">{{ favoriteCount() }}</p>
-      <p class="tile__hint">Quick access</p>
-    </article>
-  </div> -->
-
-  <div class="list">
-    @for (item of vaultItems().data; track item.id) {
-      <article class="row" (click)="openEdit(item)" style="cursor: pointer" title="Click to edit">
-        <span class="row__avatar" aria-hidden="true">{{ initial(item) }}</span>
-
-        <div class="row__main">
-          <p class="row__name">{{ item.title }}</p>
-          <p class="row__user">{{ user?.email }}</p>
-        </div>
-
-        <span class="row__category">{{ typeLabels[item.type] }}</span>
-
-        <span class="row__date">{{ item.updatedAt | date: 'MMM d, y' }}</span>
-
-        <div class="row__actions" (click)="$event.stopPropagation()">
-          <!-- Marcar / desmarcar favorito -->
-          <button
-            type="button"
-            class="icon-btn"
-            [class.icon-btn--on]="item.isFavorite"
-            (click)="toggleFavorite(item)"
-            [attr.aria-pressed]="item.isFavorite"
-            [attr.aria-label]="item.isFavorite ? 'Remove from favorites' : 'Add to favorites'"
-            [title]="item.isFavorite ? 'Remove from favorites' : 'Add to favorites'"
-          >
-            <ng-icon name="heroStarSolid" size="18" />
-          </button>
-
-          <button
-            type="button"
-            class="icon-btn"
-            [class.icon-btn--ok]="copiedId() === item.id"
-            (click)="copy(item)"
-            aria-label="Copy"
-            [title]="copiedId() === item.id ? 'Copied' : 'Copy'"
-          >
-            <ng-icon
-              [name]="copiedId() === item.id ? 'heroCheckSolid' : 'heroClipboardDocumentSolid'"
-              size="18"
-            />
-          </button>
-        </div>
-      </article>
-    } @empty {
-      <div class="empty">
-        <ng-icon name="heroMagnifyingGlassSolid" size="28" />
-        <p class="empty__title">Nothing found</p>
-        <p class="empty__text">Try another search or add your first item.</p>
+        <button
+          id="new-folder-btn"
+          type="button"
+          class="folders__add"
+          aria-label="New folder"
+          title="New folder"
+          (click)="openFolderForm()"
+        >
+          <ng-icon name="heroFolderPlusSolid" size="18" aria-hidden="true" />
+        </button>
       </div>
-    }
+
+      <div id="folders-body" class="folders__body" [hidden]="!foldersOpen()">
+        <ul class="folders__list">
+          <li>
+            <button
+              type="button"
+              class="folder"
+              [class.folder--active]="selectedFolderId() === null"
+              [attr.aria-current]="selectedFolderId() === null ? 'true' : null"
+              (click)="selectFolder(null)"
+            >
+              <ng-icon name="heroSquares2x2Solid" size="18" aria-hidden="true" />
+              <span class="folder__name">All items</span>
+              <span class="folder__count" aria-hidden="true">{{ vaultItems().data.length }}</span>
+              <span class="sr-only">, {{ vaultItems().data.length }} items</span>
+            </button>
+          </li>
+
+          @for (folder of folders().data; track folder.id) {
+            <li>
+              <button
+                type="button"
+                class="folder"
+                [id]="'folder-' + folder.id"
+                [class.folder--active]="selectedFolderId() === folder.id"
+                [attr.aria-current]="selectedFolderId() === folder.id ? 'true' : null"
+                /* (click)="selectFolder(folder.id)" */
+              >
+                <ng-icon name="heroFolderSolid" size="18" aria-hidden="true" />
+                <span class="folder__name">{{ folder.name }}</span>
+                <!-- <span class="folder__count" aria-hidden="true">{{ countIn(folder.id) }}</span> -->
+                <!-- <span class="sr-only">, {{ countIn(folder.id) }} items</span> -->
+              </button>
+            </li>
+          }
+        </ul>
+
+        @if (folders().total === 0) {
+          <p class="folders__hint">No folders yet. Create one to organize your items.</p>
+        } @else if (folderFilter()) {
+          <p class="folders__hint">No folders match “{{ folderFilter() }}”.</p>
+        }
+      </div>
+    </aside>
+
+    <div class="list">
+      @for (item of visibleItems(); track item.id) {
+        <article class="row" (click)="openEdit(item)" style="cursor: pointer" title="Click to edit">
+          <span class="row__avatar" aria-hidden="true">{{ initial(item) }}</span>
+
+          <div class="row__main">
+            <p class="row__name">{{ item.title }}</p>
+            <p class="row__user">
+              {{ user?.email }}
+            </p>
+          </div>
+
+          <span class="row__category">{{ typeLabels[item.type] }}</span>
+
+          <span class="row__date">{{ item.updatedAt | date: 'MMM d, y' }}</span>
+
+          <div class="row__actions" (click)="$event.stopPropagation()">
+            <!-- Mover a carpeta -->
+            <button
+              type="button"
+              class="icon-btn"
+              [id]="'move-' + item.id"
+              (click)="openMove(item)"
+              aria-label="Move to folder"
+              title="Move to folder"
+            >
+              <ng-icon name="heroFolderArrowDownSolid" size="18" />
+            </button>
+
+            <!-- Marcar / desmarcar favorito -->
+            <button
+              type="button"
+              class="icon-btn"
+              [class.icon-btn--on]="item.isFavorite"
+              (click)="toggleFavorite(item)"
+              [attr.aria-pressed]="item.isFavorite"
+              [attr.aria-label]="item.isFavorite ? 'Remove from favorites' : 'Add to favorites'"
+              [title]="item.isFavorite ? 'Remove from favorites' : 'Add to favorites'"
+            >
+              <ng-icon name="heroStarSolid" size="18" />
+            </button>
+
+            <button
+              type="button"
+              class="icon-btn"
+              [class.icon-btn--ok]="copiedId() === item.id"
+              (click)="copy(item)"
+              aria-label="Copy"
+              [title]="copiedId() === item.id ? 'Copied' : 'Copy'"
+            >
+              <ng-icon
+                [name]="copiedId() === item.id ? 'heroCheckSolid' : 'heroClipboardDocumentSolid'"
+                size="18"
+              />
+            </button>
+          </div>
+        </article>
+      } @empty {
+        <div class="empty">
+          <ng-icon
+            [name]="selectedFolderId() !== null ? 'heroFolderSolid' : 'heroMagnifyingGlassSolid'"
+            size="28"
+          />
+          @if (selectedFolderId() !== null) {
+            <p class="empty__title">This folder is empty</p>
+            <p class="empty__text">Use the folder button on any item to move it here.</p>
+          } @else {
+            <p class="empty__title">Nothing found</p>
+            <p class="empty__text">Try another search or add your first item.</p>
+          }
+        </div>
+      }
+    </div>
   </div>
 </section>
 
-<!-- Modal controlado reactivamente por el servicio local -->
+<!-- Modal de items -->
 @if (modalState.mode() !== null) {
   <app-modal
     size="lg"
@@ -109,5 +183,119 @@
     (onCancel)="modalState.close()"
   >
     <app-new-item-form (saved)="saveVault($event)" (cancelled)="modalState.close()" />
+  </app-modal>
+}
+
+<!-- Modal: nueva carpeta -->
+@if (showFolderForm()) {
+  <app-modal
+    size="sm"
+    [title]="'New folder'"
+    [description]="'Group related items together.'"
+    (onCancel)="closeFolderForm()"
+  >
+    <form
+      id="folder-form"
+      class="form"
+      [formGroup]="folderForm"
+      (ngSubmit)="createFolder()"
+      novalidate
+    >
+      @if (folderError(); as message) {
+        <div class="alert" role="alert">{{ message }}</div>
+      }
+      <div class="field">
+        <label class="label" for="folder-name">Name</label>
+        <input
+          id="folder-name"
+          class="input"
+          type="text"
+          formControlName="name"
+          maxlength="50"
+          autocomplete="off"
+          placeholder="Work, Personal, Finance…"
+        />
+      </div>
+    </form>
+
+    <button modal-footer type="button" class="btn btn--ghost" (click)="closeFolderForm()">
+      Cancel
+    </button>
+    <button
+      modal-footer
+      type="submit"
+      form="folder-form"
+      class="btn"
+      [disabled]="folderForm.invalid"
+    >
+      Create folder
+    </button>
+  </app-modal>
+}
+
+<!-- Modal: mover item a una carpeta (radios nativos: el navegador gestiona las flechas) -->
+@if (movingItem(); as item) {
+  <app-modal
+    size="sm"
+    [title]="'Move to folder'"
+    [description]="item.title"
+    (onCancel)="closeMove()"
+  >
+    @if (folders().total === 0) {
+      <p class="pick-empty">You don’t have any folders yet.</p>
+      <button type="button" class="btn" (click)="movingItem.set(null); openFolderForm()">
+        <ng-icon name="heroFolderPlusSolid" size="18" aria-hidden="true" />
+        Create a folder
+      </button>
+    } @else {
+      <form id="move-form" (submit)="$event.preventDefault(); confirmMove()">
+        <fieldset class="pick-set">
+          <legend class="sr-only">Choose a folder for {{ item.title }}</legend>
+
+          <label class="pick">
+            <input
+              class="pick__input"
+              type="radio"
+              name="move-folder"
+              [checked]="moveTarget() === null"
+              (change)="moveTarget.set(null)"
+            />
+            <ng-icon name="heroXMarkSolid" size="18" aria-hidden="true" />
+            <span class="pick__label">No folder</span>
+            @if (moveTarget() === null) {
+              <ng-icon class="pick__check" name="heroCheckSolid" size="18" aria-hidden="true" />
+            }
+          </label>
+
+          @for (folder of folders().data; track folder.id) {
+            <label class="pick">
+              <input
+                class="pick__input"
+                type="radio"
+                name="move-folder"
+                [checked]="moveTarget() === folder.id"
+                /* (change)="moveTarget.set(folder.id)" */
+              />
+              <ng-icon name="heroFolderSolid" size="18" aria-hidden="true" />
+              <span class="pick__label">{{ folder.name }}</span>
+              @if (moveTarget() === folder.id) {
+                <ng-icon class="pick__check" name="heroCheckSolid" size="18" aria-hidden="true" />
+              }
+            </label>
+          }
+        </fieldset>
+      </form>
+    }
+
+    <button modal-footer type="button" class="btn btn--ghost" (click)="closeMove()">Cancel</button>
+    <button
+      modal-footer
+      type="submit"
+      form="move-form"
+      class="btn"
+      [disabled]="folders().total === 0"
+    >
+      Move here
+    </button>
   </app-modal>
 }

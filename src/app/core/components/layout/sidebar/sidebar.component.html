@@ -3,17 +3,12 @@
     <img
       class="brand__logo"
       src="/chiave-logo-copia-sin-fondo.png"
-      alt="Chieva logo"
+      alt="Chiave logo"
       width="36"
       height="36"
     />
-    <span class="brand__name">Chieva</span>
+    <span class="brand__name">Chiave</span>
   </a>
-
-  <button type="button" class="new-btn" (click)="newItem.emit()">
-    <ng-icon name="heroPlusSolid" size="18" />
-    <span class="label">New item</span>
-  </button>
 
   <nav class="nav" aria-label="Main navigation">
     @for (section of sections; track section.title) {
@@ -52,7 +47,7 @@
       <span class="label">Settings</span>
     </a>
 
-    <div class="user" routerLink="/profile" title="Profile">
+    <div class="user" routerLink="/app/profile" title="Profile">
       <span class="user__avatar" aria-hidden="true">{{ initials() }}</span>
       <div class="user__info label">
         <p class="user__name">{{ userName() }}</p>
