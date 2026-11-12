@@ -1,8 +1,8 @@
 <section class="vault">
   <header class="head">
     <div>
-      <!-- <h1 class="head__title">{{ pageTitle() }}</h1> -->
-      <p class="head__sub">{{ visibleItems().length }} items protected in your vault</p>
+      <h1 class="head__title">{{ pageTitle() }}</h1>
+      <!-- <p class="head__sub">{{ visibleItems().length }} items protected in your vault</p> -->
     </div>
 
     <div class="head__actions">
@@ -21,7 +21,8 @@
     <!-- Barra lateral de carpetas (patrón disclosure para contraerla) -->
     <aside
       class="folders"
-      [class.folders--collapsed]="!foldersOpen()"+
+      [class.folders--collapsed]="!foldersOpen()"
+      +
       aria-labelledby="folders-title"
     >
       <div class="folders__head">
@@ -62,7 +63,7 @@
               class="folder"
               [class.folder--active]="selectedFolderId() === null"
               [attr.aria-current]="selectedFolderId() === null ? 'true' : null"
-              (click)="selectFolder(null)"
+              (click)="selectFolder(undefined)"
             >
               <ng-icon name="heroSquares2x2Solid" size="18" aria-hidden="true" />
               <span class="folder__name">All items</span>
@@ -79,7 +80,7 @@
                 [id]="'folder-' + folder.id"
                 [class.folder--active]="selectedFolderId() === folder.id"
                 [attr.aria-current]="selectedFolderId() === folder.id ? 'true' : null"
-                /* (click)="selectFolder(folder.id)" */
+                (click)="selectFolder(folder?.id)"
               >
                 <ng-icon name="heroFolderSolid" size="18" aria-hidden="true" />
                 <span class="folder__name">{{ folder.name }}</span>

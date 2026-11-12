@@ -12,7 +12,7 @@ export interface FindByUserId {
 
 export interface CreateVaultProps {
   userId: number;
-  folderId?: number;
+  folderId: number | null;
   type: VaultItemTypeEnum;
   title: string;
   isFavorite?: boolean;

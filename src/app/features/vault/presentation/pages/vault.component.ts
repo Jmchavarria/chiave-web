@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -36,6 +36,9 @@ import { CreateFolderUseCase } from '../../../folders/application/create-folder/
 import { FolderModel } from '../../../folders/domain/models/folder.model';
 import { GetAllFoldersByUserUseCase } from '../../../folders/application/get-folder-by-users/get-folders-by-user.use-case';
 import { VAULT_TYPE_LABELS } from '../../constants/vault.constants';
+import { VaultItem } from '../../../welcome/bento/vault-tile/vault-tile.component';
+import { isNgTemplate } from '@angular/compiler';
+import { of } from 'rxjs';
 
 // Carpeta solo de interfaz (vive en memoria, se pierde al recargar)
 interface UiFolder {
@@ -81,7 +84,7 @@ export class VaultComponent implements OnInit {
   serverError = signal<string | null>(null);
   private errorTimer: ReturnType<typeof setTimeout> | null = null;
   isLoading = signal<boolean>(false);
-  foldersOpen = signal<boolean>(false);
+  foldersOpen = signal<boolean>(true);
 
   constructor(
     private readonly findVaultByUserIdUseCase: FindVaultByUserIdUseCase,
@@ -118,9 +121,23 @@ export class VaultComponent implements OnInit {
   readonly copiedId = signal<number | null>(null);
   private readonly pendingFavorites = new Set<number>();
   readonly typeLabels = VAULT_TYPE_LABELS;
+  readonly pageTitle = computed(
+    () => this.folders().data.find((f) => f.id === this.selectedFolderId())?.name ?? 'All items',
+  );
 
   readonly selectedFolderId = signal<number | null>(null);
-  private readonly folderOf = signal<Record<number, number>>({}); // id del item → id de carpeta
+
+  readonly folderOf = computed(() => {
+    const response = this.vaultItems();
+    if (!response.data) return {};
+    return response.data.reduce<Record<number, number>>((acc, item) => {
+      if (item.id != null && item.folderId != null) {
+        acc[item.id] = item.folderId;
+      }
+      return acc;
+    }, {});
+  });
+
   private nextFolderId = 1;
 
   // Filtro de la barra (solo se muestra con muchas carpetas)x
@@ -140,13 +157,14 @@ export class VaultComponent implements OnInit {
   readonly visibleItems = computed(() => {
     const all = this.vaultItems().data;
     const selected = this.selectedFolderId();
-    if (selected === null) return all;
+    if (!selected) return all;
+
     return all.filter((item) => this.folderOf()[item.id] === selected);
   });
-  
+
   // Texto para la región aria-live: anuncia cada cambio de filtro
   readonly statusMessage = computed(() => {
-    const count = this.visibleItems().length;
+    // const count = this.visibleItems().length;
     // return `${this.pageTitle()}: ${count} ${count === 1 ? 'item' : 'items'}`;
   });
 
@@ -228,7 +246,7 @@ export class VaultComponent implements OnInit {
   }
 
   openMove(item: VaultModel): void {
-    this.moveTarget.set(this.folderOf()[item.id] ?? null); // preselecciona la carpeta actual
+    // this.moveTarget.set(this.folderOf()[item.id] ?? null); // preselecciona la carpeta actual
     this.movingItem.set(item);
   }
 
@@ -242,14 +260,6 @@ export class VaultComponent implements OnInit {
     const item = this.movingItem();
     if (!item) return;
 
-    const target = this.moveTarget();
-    this.folderOf.update((map) => {
-      const next = { ...map };
-      if (target === null) delete next[item.id];
-      else next[item.id] = target;
-      return next;
-    });
-
     this.closeMove();
   }
 
@@ -261,33 +271,36 @@ export class VaultComponent implements OnInit {
     } catch {}
   }
 
-  // ── Items ──────────────────────────────────────────
   private createVault(input: CreateVaultProps): void {
-    this.createVaultUseCase
-      .execute(input)
-      .then(() => {
-        this.modalState.close();
-        this.loadVaultItems();
-      })
-      .catch((error) => {
-        console.error('Error al crear vault item:', error);
+    if (this.selectedFolderId())
+      this.createVaultUseCase
+        .execute({
+          ...input,
+          folderId: this.selectedFolderId(),
+        })
+        .then(() => {
+          this.modalState.close();
+          this.loadVaultItems();
+        })
+        .catch((error) => {
+          console.error('Error al crear vault item:', error);
 
-        const message =
-          error?.error?.error?.message ?? error?.message ?? 'No fue posible crear el elemento.';
+          const message =
+            error?.error?.error?.message ?? error?.message ?? 'No fue posible crear el elemento.';
 
-        this.serverError.set(message);
+          this.serverError.set(message);
 
-        if (this.errorTimer) {
-          clearTimeout(this.errorTimer);
-        }
+          if (this.errorTimer) {
+            clearTimeout(this.errorTimer);
+          }
 
-        this.errorTimer = setTimeout(() => {
-          this.serverError.set(null);
-        }, 5000);
-      })
-      .finally(() => {
-        this.isLoading.set(false);
-      });
+          this.errorTimer = setTimeout(() => {
+            this.serverError.set(null);
+          }, 5000);
+        })
+        .finally(() => {
+          this.isLoading.set(false);
+        });
   }
 
   private updateVault(input: CreateVaultProps): void {
