@@ -817,3 +817,81 @@ $danger: var(--chv-danger, #ff8f7e);
   color: $danger;
   font-size: 13px;
 }
+
+// ── Modal "Mover a carpeta" ────────────────────────
+// Pegar al final de tu SCSS, antes del último bloque si prefieres.
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(8, 7, 5, 0.7);
+  backdrop-filter: blur(4px);
+
+  &__panel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 420px;
+    max-height: 80vh;
+    padding: 22px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #151618;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    color: #fff;
+  }
+
+  &__title {
+    flex: none;
+    margin: 0 0 16px;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  // la lista scrollea por dentro si hay muchas carpetas
+  &__list {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #40434e transparent;
+
+    // reutiliza .folder de la barra lateral, con aspecto de botón de lista
+    .folder {
+      min-height: 46px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.85);
+
+      &:hover {
+        background: rgba(221, 227, 146, 0.1);
+        border-color: rgba(221, 227, 146, 0.4);
+        color: $lime;
+      }
+    }
+  }
+
+  &__empty {
+    margin: 0;
+    padding: 18px 0;
+    text-align: center;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.55);
+  }
+}
+
+// Pie con los botones (lo usa el modal de mover)
+.foot {
+  flex: none;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}

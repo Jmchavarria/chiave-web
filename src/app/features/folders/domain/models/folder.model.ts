@@ -1,5 +1,5 @@
 export interface FolderModel {
-  id?: number;
+  id: number;
   name: string;
   userId: number;
   isArchived: boolean;

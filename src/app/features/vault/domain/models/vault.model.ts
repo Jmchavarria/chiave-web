@@ -1,5 +1,4 @@
-import { VaultItemTypeEnum } from '../enums/vault-item-type.enum'; // O la ruta donde tengas tu enum
-
+import { VaultItemTypeEnum } from '../enums/vault-item-type.enum'; 
 export interface VaultModel {
   id: number;
   userId: number;

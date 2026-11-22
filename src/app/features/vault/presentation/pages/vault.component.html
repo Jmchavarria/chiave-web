@@ -58,12 +58,13 @@
       <div id="folders-body" class="folders__body" [hidden]="!foldersOpen()">
         <ul class="folders__list">
           <li>
+            <!-- BOTON DE ALL ITEMS -->
             <button
               type="button"
               class="folder"
               [class.folder--active]="selectedFolderId() === null"
               [attr.aria-current]="selectedFolderId() === null ? 'true' : null"
-              (click)="selectFolder(undefined)"
+              (click)="selectFolder(null)"
             >
               <ng-icon name="heroSquares2x2Solid" size="18" aria-hidden="true" />
               <span class="folder__name">All items</span>
@@ -121,7 +122,7 @@
               type="button"
               class="icon-btn"
               [id]="'move-' + item.id"
-              (click)="openMove(item)"
+              (click)="openMove(); selectedItem.set(item)"
               aria-label="Move to folder"
               title="Move to folder"
             >
@@ -234,69 +235,22 @@
   </app-modal>
 }
 
-<!-- Modal: mover item a una carpeta (radios nativos: el navegador gestiona las flechas) -->
-@if (movingItem(); as item) {
-  <app-modal
-    size="sm"
-    [title]="'Move to folder'"
-    [description]="item.title"
-    (onCancel)="closeMove()"
-  >
-    @if (folders().total === 0) {
-      <p class="pick-empty">You don’t have any folders yet.</p>
-      <button type="button" class="btn" (click)="movingItem.set(null); openFolderForm()">
-        <ng-icon name="heroFolderPlusSolid" size="18" aria-hidden="true" />
-        Create a folder
-      </button>
-    } @else {
-      <form id="move-form" (submit)="$event.preventDefault(); confirmMove()">
-        <fieldset class="pick-set">
-          <legend class="sr-only">Choose a folder for {{ item.title }}</legend>
+@if (moveItem()) {
+  <app-modal (onCancel)="closeMove()">
+    <h2 id="move-title" class="modal__title">Mover a carpeta</h2>
 
-          <label class="pick">
-            <input
-              class="pick__input"
-              type="radio"
-              name="move-folder"
-              [checked]="moveTarget() === null"
-              (change)="moveTarget.set(null)"
-            />
-            <ng-icon name="heroXMarkSolid" size="18" aria-hidden="true" />
-            <span class="pick__label">No folder</span>
-            @if (moveTarget() === null) {
-              <ng-icon class="pick__check" name="heroCheckSolid" size="18" aria-hidden="true" />
-            }
-          </label>
+    <div class="modal__list">
+      @for (folder of folders().data; track $index) {
+        <button type="button" class="folder" (click)="moveTo(folder.id)">
+          {{ folder.name }}
+        </button>
+      } @empty {
+        <p class="modal__empty">No tienes carpetas todavía. Crea una para poder mover este ítem.</p>
+      }
+    </div>
 
-          @for (folder of folders().data; track folder.id) {
-            <label class="pick">
-              <input
-                class="pick__input"
-                type="radio"
-                name="move-folder"
-                [checked]="moveTarget() === folder.id"
-                /* (change)="moveTarget.set(folder.id)" */
-              />
-              <ng-icon name="heroFolderSolid" size="18" aria-hidden="true" />
-              <span class="pick__label">{{ folder.name }}</span>
-              @if (moveTarget() === folder.id) {
-                <ng-icon class="pick__check" name="heroCheckSolid" size="18" aria-hidden="true" />
-              }
-            </label>
-          }
-        </fieldset>
-      </form>
-    }
-
-    <button modal-footer type="button" class="btn btn--ghost" (click)="closeMove()">Cancel</button>
-    <button
-      modal-footer
-      type="submit"
-      form="move-form"
-      class="btn"
-      [disabled]="folders().total === 0"
-    >
-      Move here
-    </button>
+    <div class="foot">
+      <button type="button" class="btn btn--ghost" (click)="closeMove()">Cancelar</button>
+    </div>
   </app-modal>
 }

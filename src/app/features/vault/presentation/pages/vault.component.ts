@@ -36,9 +36,6 @@ import { CreateFolderUseCase } from '../../../folders/application/create-folder/
 import { FolderModel } from '../../../folders/domain/models/folder.model';
 import { GetAllFoldersByUserUseCase } from '../../../folders/application/get-folder-by-users/get-folders-by-user.use-case';
 import { VAULT_TYPE_LABELS } from '../../constants/vault.constants';
-import { VaultItem } from '../../../welcome/bento/vault-tile/vault-tile.component';
-import { isNgTemplate } from '@angular/compiler';
-import { of } from 'rxjs';
 
 // Carpeta solo de interfaz (vive en memoria, se pierde al recargar)
 interface UiFolder {
@@ -85,6 +82,7 @@ export class VaultComponent implements OnInit {
   private errorTimer: ReturnType<typeof setTimeout> | null = null;
   isLoading = signal<boolean>(false);
   foldersOpen = signal<boolean>(true);
+  moveItem = signal<boolean>(false);
 
   constructor(
     private readonly findVaultByUserIdUseCase: FindVaultByUserIdUseCase,
@@ -124,9 +122,9 @@ export class VaultComponent implements OnInit {
   readonly pageTitle = computed(
     () => this.folders().data.find((f) => f.id === this.selectedFolderId())?.name ?? 'All items',
   );
+  selectedItem = signal<VaultModel | null>(null);
 
   readonly selectedFolderId = signal<number | null>(null);
-
   readonly folderOf = computed(() => {
     const response = this.vaultItems();
     if (!response.data) return {};
@@ -206,7 +204,7 @@ export class VaultComponent implements OnInit {
 
   openFolderForm(): void {
     this.folderForm.reset();
-    this.folderError.set(null);
+    this.folderError.set(null);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
     this.showFolderForm.set(true);
     this.focusLater('folder-name');
   }
@@ -245,19 +243,34 @@ export class VaultComponent implements OnInit {
     const folder: UiFolder = { id: this.nextFolderId++, name };
   }
 
-  openMove(item: VaultModel): void {
-    // this.moveTarget.set(this.folderOf()[item.id] ?? null); // preselecciona la carpeta actual
-    this.movingItem.set(item);
-  }
-
   closeMove(): void {
-    const item = this.movingItem();
-    this.movingItem.set(null);
-    if (item) this.focusLater('move-' + item.id, 'folders-toggle');
+    this.moveItem.set(false);
+    this.selectedFolderId.set(null);
   }
 
-  confirmMove(): void {
+  openMove() {
+    this.moveItem.set(true);
+  }
+
+  moveTo(folderId: number) {
+    const id = this.selectedItem()?.id;
+
+    if (id !== undefined) {
+      this.updateVaultUseCase.execute({
+        id,
+        data: {
+          folderId,
+        },
+      });
+      this.moveItem.set(false);
+      this.loadVaultItems();
+    }
+  }
+
+  confirmMove(id: number): void {
+    // llamar al caso de uso update vaultitem para actualizar la carpeta del vaultitems
     const item = this.movingItem();
+    console.log('VAMOS A VER CUAL ES EL ITEM', item);
     if (!item) return;
 
     this.closeMove();
