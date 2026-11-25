@@ -236,21 +236,23 @@
 }
 
 @if (moveItem()) {
-  <app-modal (onCancel)="closeMove()">
-    <h2 id="move-title" class="modal__title">Mover a carpeta</h2>
-
+  <app-modal
+    size="sm"
+    title="Move to folder"
+    description="Choose where to put this item."
+    (onCancel)="closeMove()"
+  >
     <div class="modal__list">
-      @for (folder of folders().data; track $index) {
+      @for (folder of folders().data; track folder.id) {
         <button type="button" class="folder" (click)="moveTo(folder.id)">
-          {{ folder.name }}
+          <ng-icon name="heroFolderSolid" size="18" aria-hidden="true" />
+          <span class="folder__name">{{ folder.name }}</span>
         </button>
       } @empty {
-        <p class="modal__empty">No tienes carpetas todavía. Crea una para poder mover este ítem.</p>
+        <p class="modal__empty">No folders yet. Create one to move this item.</p>
       }
     </div>
 
-    <div class="foot">
-      <button type="button" class="btn btn--ghost" (click)="closeMove()">Cancelar</button>
-    </div>
+    <button modal-footer type="button" class="btn btn--ghost" (click)="closeMove()">Cancel</button>
   </app-modal>
 }

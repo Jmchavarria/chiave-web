@@ -1,0 +1,31 @@
+<div class="toasts" aria-live="polite" aria-relevant="additions">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div
+      class="toast"
+      [class.toast--error]="toast.type === 'error'"
+      [attr.role]="toast.type === 'error' ? 'alert' : 'status'"
+      /* (mouseenter)="toastService.pause(toast.id)"
+      (mouseleave)="toastService.resume(toast.id)"
+      (focusin)="toastService.pause(toast.id)"
+      (focusout)="toastService.resume(toast.id)" */
+    >
+      <ng-icon
+        class="toast__icon"
+        [name]="toast.type === 'error' ? 'heroExclamationCircleSolid' : 'heroCheckCircleSolid'"
+        size="20"
+        aria-hidden="true"
+      />
+
+      <p class="toast__message">{{ toast.message }}</p>
+
+      <button
+        type="button"
+        class="toast__close"
+        aria-label="Dismiss notification"
+        (click)="toastService.dismiss(toast.id)"
+      >
+        <ng-icon name="heroXMarkSolid" size="16" aria-hidden="true" />
+      </button>
+    </div>
+  }
+</div>

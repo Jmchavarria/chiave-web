@@ -1,0 +1,108 @@
+$lime: var(--chv-lime, #dde392);
+$black: var(--chv-black, #080705);
+$danger: var(--chv-danger, #ff8f7e);
+
+:host {
+  display: contents;
+}
+
+// Columna fija en la esquina inferior derecha, por encima de los modales
+.toasts {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(380px, calc(100vw - 32px));
+  // el contenedor no bloquea clics en la página; solo los toasts los reciben
+  pointer-events: none;
+
+  @media (max-width: 560px) {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    width: auto;
+  }
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #1b1c1f;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  color: #fff;
+  pointer-events: auto;
+  animation: toast-in 0.2s ease-out;
+
+  &__icon {
+    flex: none;
+    color: $lime;
+  }
+
+  &__message {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+
+  &__close {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.55);
+    cursor: pointer;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $lime;
+    }
+  }
+
+  // El error se distingue por icono y color de borde, no solo por color
+  &--error {
+    border-color: rgba(255, 143, 126, 0.45);
+
+    .toast__icon {
+      color: $danger;
+    }
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+}
